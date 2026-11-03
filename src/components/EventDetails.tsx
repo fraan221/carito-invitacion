@@ -9,11 +9,11 @@ interface EventDetailsProps {
 }
 
 export default function EventDetails({
-  venue = 'Salón de Eventos',
-  address = 'Buenos Aires, Argentina',
+  venue = 'BIM',
+  address = 'Cno. Gral. Belgrano 5599, B1888 Florencio Varela, Provincia de Buenos Aires',
   date = 'Sábado 6 de Febrero de 2027',
-  time = '21:00 hs',
-  mapsUrl = 'https://maps.google.com/?q=Buenos+Aires',
+  time = '21:00 a 05:00 hs',
+  mapsUrl = 'https://maps.google.com/?q=BIM+Cno+Gral+Belgrano+5599+Florencio+Varela',
 }: EventDetailsProps) {
   return (
     <section
