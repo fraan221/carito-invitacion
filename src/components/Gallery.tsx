@@ -1,3 +1,5 @@
+import FadeContent from './FadeContent'
+
 interface Photo {
   src: string
   alt: string
@@ -38,72 +40,82 @@ export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
         zIndex: 1,
       }}
     >
-      <div
-        style={{
-          maxWidth: 'var(--max-width-container)',
-          margin: '0 auto',
-          textAlign: 'center',
-        }}
+      <FadeContent
+        duration={1.2}
+        blur={10}
+        ease="sine.in"
+        staggerFrom="center"
+        disappearEase="expo.in"
       >
-        <p
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '0.8125rem',
-            letterSpacing: '0.25em',
-            textTransform: 'uppercase',
-            color: 'var(--color-silver-dark)',
-            marginBottom: '0.5rem',
-          }}
-        >
-          Recuerdos
-        </p>
-
-        <h2
-          style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-            color: 'var(--color-silver-light)',
-            marginBottom: '2.5rem',
-          }}
-        >
-          Galería de Fotos
-        </h2>
-
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '1.25rem',
+            maxWidth: 'var(--max-width-container)',
+            margin: '0 auto',
+            textAlign: 'center',
           }}
         >
-          {photos.map((photo, index) => (
-            <div
-              key={index}
-              style={{
-                position: 'relative',
-                borderRadius: 'var(--radius-md)',
-                overflow: 'hidden',
-                aspectRatio: '3 / 4',
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border-subtle)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-              }}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                loading="lazy"
+          <p
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '0.8125rem',
+              letterSpacing: '0.25em',
+              textTransform: 'uppercase',
+              color: 'var(--color-silver-dark)',
+              marginBottom: '0.5rem',
+            }}
+          >
+            Recuerdos
+          </p>
+
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+              color: 'var(--color-silver-light)',
+              marginBottom: '2.5rem',
+              letterSpacing: '0.04em',
+            }}
+          >
+            Galería de Fotos
+          </h2>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '1.25rem',
+            }}
+          >
+            {photos.map((photo, index) => (
+              <div
+                key={index}
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                  transition: 'transform 0.4s ease',
+                  position: 'relative',
+                  borderRadius: 'var(--radius-md)',
+                  overflow: 'hidden',
+                  aspectRatio: '3 / 4',
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
                 }}
-              />
-            </div>
-          ))}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    transition: 'transform 0.4s ease',
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </FadeContent>
     </section>
   )
 }

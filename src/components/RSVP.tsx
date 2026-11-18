@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { CheckCircle2, HeartHandshake, UserCheck, Send, AlertCircle } from 'lucide-react'
 import { validateGroup, submitRSVP } from '../api'
 import type { RSVPData } from '../types'
+import StarBorder from './StarBorder'
+import FadeContent from './FadeContent'
 import styles from './RSVP.module.css'
 
 interface RSVPProps {
@@ -31,14 +33,9 @@ export default function RSVP({ groupCode }: RSVPProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!code) {
-      setLoadingValidation(false)
-      setIsValidGroup(false)
-      return
-    }
+    if (!code) return
 
     let isMounted = true
-    setLoadingValidation(true)
 
     validateGroup(code)
       .then((res) => {
@@ -90,13 +87,20 @@ export default function RSVP({ groupCode }: RSVPProps) {
 
   return (
     <section id="rsvp" role="region" aria-label="Confirmación de asistencia" className={styles.section}>
-      <div className={styles.card}>
-        <div className={styles.headerIcon} aria-hidden="true">
-          <HeartHandshake size={24} />
-        </div>
+      <FadeContent
+        duration={1.2}
+        blur={10}
+        ease="sine.in"
+        staggerFrom="center"
+        disappearEase="expo.in"
+      >
+        <div className={styles.card}>
+          <div className={styles.headerIcon} aria-hidden="true">
+            <HeartHandshake size={24} />
+          </div>
 
-        <p className={styles.eyebrow}>Tu Compañía en Mi Noche</p>
-        <h2 className={styles.title}>Confirmar Asistencia</h2>
+          <p className={styles.eyebrow}>Tu Compañía en Mi Noche</p>
+          <h2 className={styles.title}>Confirmar Asistencia</h2>
 
         {/* Loading validation */}
         {loadingValidation && (
@@ -237,7 +241,19 @@ export default function RSVP({ groupCode }: RSVPProps) {
                   </div>
                 )}
 
-                <button type="submit" disabled={submitting} className={styles.submitBtn}>
+                <StarBorder
+                  as="button"
+                  type="submit"
+                  disabled={submitting}
+                  className={styles.submitBtn}
+                  color="var(--color-silver-light)"
+                  trailColor="var(--color-primary-light)"
+                  backgroundColor="var(--color-primary)"
+                  textColor="var(--color-silver-light)"
+                  borderColor="var(--border-silver)"
+                  thickness={2}
+                  radius={6}
+                >
                   {submitting ? (
                     <span>Enviando confirmación...</span>
                   ) : (
@@ -246,12 +262,13 @@ export default function RSVP({ groupCode }: RSVPProps) {
                       <span>Confirmar Asistencia</span>
                     </>
                   )}
-                </button>
+                </StarBorder>
               </form>
             )}
           </>
         )}
       </div>
+      </FadeContent>
     </section>
   )
 }

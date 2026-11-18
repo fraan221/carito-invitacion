@@ -1,9 +1,13 @@
+import CountUp from './CountUp'
+
 export default function Hero() {
   return (
     <header
+      id="hero"
       role="banner"
       style={{
         minHeight: '100vh',
+        height: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -38,6 +42,7 @@ export default function Hero() {
         </span>
 
         <h1
+          aria-label="Mis XV"
           style={{
             fontFamily: 'var(--font-display)',
             fontSize: 'clamp(2.75rem, 8vw, 4.5rem)',
@@ -50,7 +55,18 @@ export default function Hero() {
             textShadow: '0 0 35px var(--color-silver-glow)',
           }}
         >
-          Mis XV
+          <span className="sr-only">Mis XV</span>
+          <span aria-hidden="true">
+            Mis{' '}
+            <CountUp
+              from={1}
+              to={15}
+              format="roman"
+              easing="expo"
+              duration={2.2}
+              trigger="load"
+            />
+          </span>
         </h1>
 
         <div
@@ -89,7 +105,7 @@ export default function Hero() {
 
       <a
         href="#mensaje"
-        aria-label="Desplazarse hacia abajo"
+        aria-label="Desplazarse hacia abajo al mensaje"
         style={{
           position: 'absolute',
           bottom: '2.5rem',
@@ -97,15 +113,21 @@ export default function Hero() {
           fontSize: '0.75rem',
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
-          display: 'flex',
+          display: 'inline-flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.5rem',
+          justifyContent: 'center',
+          minWidth: '44px',
+          minHeight: '44px',
+          padding: '0.5rem 1rem',
+          gap: '0.35rem',
           opacity: 0.85,
+          borderRadius: 'var(--radius-sm)',
+          transition: 'color 0.25s ease, opacity 0.25s ease',
         }}
       >
         <span>Descubrir</span>
-        <span aria-hidden="true" style={{ fontSize: '1rem', animation: 'bounce 2s infinite' }}>
+        <span aria-hidden="true" style={{ fontSize: '1.125rem', animation: 'bounce 2s infinite ease-in-out' }}>
           ↓
         </span>
       </a>

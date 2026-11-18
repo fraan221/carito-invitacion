@@ -20,7 +20,8 @@ describe('Static Sections', () => {
     it('renders the personal message and invitation text', () => {
       render(<Message />)
       expect(screen.getByRole('region', { name: /mensaje/i })).toBeInTheDocument()
-      expect(screen.getByText(/inolvidable/i)).toBeInTheDocument()
+      expect(screen.getByText(/noches que se vuelven eternas/i)).toBeInTheDocument()
+      expect(screen.getByText(/mis 15 años/i)).toBeInTheDocument()
     })
   })
 
@@ -60,6 +61,7 @@ describe('Static Sections', () => {
       render(<Closing />)
       expect(screen.getByRole('region', { name: /despedida/i })).toBeInTheDocument()
       expect(screen.getByText(/carolina/i)).toBeInTheDocument()
+      expect(screen.getByText(/noche mágica e inolvidable/i)).toBeInTheDocument()
     })
   })
 })

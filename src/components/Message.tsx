@@ -1,62 +1,76 @@
+import FadeContent from './FadeContent'
+
 export default function Message() {
   return (
     <section
       id="mensaje"
       aria-label="Mensaje de bienvenida"
       style={{
-        padding: '5rem 1.5rem',
-        textAlign: 'center',
-        position: 'relative',
+        padding: "5rem 1.5rem",
+        textAlign: "center",
+        position: "relative",
         zIndex: 1,
       }}
     >
-      <div
-        style={{
-          maxWidth: '520px',
-          margin: '0 auto',
-          background: 'var(--bg-surface)',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '2.5rem 1.75rem',
-          backdropFilter: 'blur(12px)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-        }}
+      <FadeContent
+        duration={1.2}
+        blur={10}
+        ease="sine.in"
+        staggerFrom="center"
+        disappearEase="expo.in"
       >
-        <span
+        <div
           style={{
-            display: 'block',
-            fontSize: '1.25rem',
-            color: 'var(--color-silver)',
-            marginBottom: '1rem',
+            maxWidth: "520px",
+            margin: "0 auto",
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: "var(--radius-lg)",
+            padding: "2.5rem 1.75rem",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
           }}
-          aria-hidden="true"
         >
-          ✦
-        </span>
+          <span
+            style={{
+              display: "block",
+              fontSize: "1.25rem",
+              color: "var(--color-silver)",
+              marginBottom: "1rem",
+            }}
+            aria-hidden="true"
+          >
+            ✦
+          </span>
 
-        <blockquote
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(1.0625rem, 2.5vw, 1.25rem)',
-            fontStyle: 'italic',
-            lineHeight: 1.8,
-            color: 'var(--color-silver-light)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          &ldquo;Hay momentos en la vida que son irrepetibles, pero compartirlos con las personas que más quiero los hace inolvidables.&rdquo;
-        </blockquote>
+          <blockquote
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.0625rem, 2.5vw, 1.25rem)",
+              fontStyle: "italic",
+              lineHeight: 1.8,
+              color: "var(--color-silver-light)",
+              marginBottom: "1.5rem",
+            }}
+          >
+            &ldquo;Hay noches que se vuelven eternas en el corazón, y esta será una
+            de ellas.&rdquo;
+          </blockquote>
 
-        <p
-          style={{
-            fontSize: '0.9375rem',
-            lineHeight: 1.7,
-            color: 'var(--text-muted)',
-          }}
-        >
-          Te espero para compartir una noche llena de magia, risas y recuerdos que guardaremos para siempre.
-        </p>
-      </div>
+          <p
+            style={{
+              fontSize: "0.9375rem",
+              lineHeight: 1.7,
+              color: "var(--text-muted)",
+            }}
+          >
+            Hoy comienza uno de los capítulos más lindos de mi historia, y quiero
+            compartirlo con las personas que hacen brillar mi vida. Te invito a ser
+            parte de mis 15 años, una noche llena de magia, sueños y momentos que
+            quedarán para siempre en mi memoria.
+          </p>
+        </div>
+      </FadeContent>
     </section>
-  )
+  );
 }

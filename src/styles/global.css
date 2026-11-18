@@ -12,16 +12,44 @@
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+  overflow-x: clip;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) var(--bg-deep);
 }
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--bg-deep);
   color: var(--text-main);
   font-family: var(--font-sans);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.4);
+  color: var(--color-silver-light);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 3px;
+}
+
+::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
 }
 
 h1, h2, h3, h4, .font-display {
@@ -39,6 +67,18 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

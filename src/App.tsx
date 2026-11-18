@@ -50,24 +50,26 @@ export default function App() {
     <div ref={containerRef} className={styles.appContainer}>
       <StarryBackground />
       <Hero />
-      <div data-reveal>
-        <Message />
-      </div>
-      <div data-reveal>
-        <Countdown />
-      </div>
-      <div data-reveal>
-        <EventDetails />
-      </div>
-      <div data-reveal>
-        <Gallery />
-      </div>
-      <div data-reveal>
-        <RSVP />
-      </div>
-      <div data-reveal>
-        <Gifts />
-      </div>
+      <main id="main-content">
+        <div data-reveal>
+          <Message />
+        </div>
+        <div data-reveal>
+          <Countdown />
+        </div>
+        <div data-reveal>
+          <EventDetails />
+        </div>
+        <div data-reveal>
+          <Gallery />
+        </div>
+        <div data-reveal>
+          <RSVP />
+        </div>
+        <div data-reveal>
+          <Gifts />
+        </div>
+      </main>
       <div data-reveal>
         <Closing />
       </div>

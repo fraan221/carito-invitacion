@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import CountUp from './CountUp'
+import FadeContent from './FadeContent'
 
 export interface TimeRemaining {
   days: number
@@ -41,10 +43,10 @@ export default function Countdown({ targetDate = '2027-02-06T21:00:00' }: Countd
   }, [targetDate])
 
   const units = [
-    { label: 'DÍAS', value: timeLeft.days },
-    { label: 'HORAS', value: timeLeft.hours },
-    { label: 'MINUTOS', value: timeLeft.minutes },
-    { label: 'SEGUNDOS', value: timeLeft.seconds },
+    { label: 'DÍAS', value: timeLeft.days, animate: true },
+    { label: 'HORAS', value: timeLeft.hours, animate: true },
+    { label: 'MINUTOS', value: timeLeft.minutes, animate: true },
+    { label: 'SEGUNDOS', value: timeLeft.seconds, animate: false },
   ]
 
   return (
@@ -57,66 +59,85 @@ export default function Countdown({ targetDate = '2027-02-06T21:00:00' }: Countd
         zIndex: 1,
       }}
     >
-      <p
-        style={{
-          fontFamily: 'var(--font-display)',
-          color: 'var(--color-silver-dark)',
-          fontSize: '0.875rem',
-          letterSpacing: '0.25em',
-          textTransform: 'uppercase',
-          marginBottom: '1.25rem',
-        }}
+      <FadeContent
+        duration={1.2}
+        blur={10}
+        ease="sine.in"
+        staggerFrom="center"
+        disappearEase="expo.in"
       >
-        Cada segundo nos acerca más
-      </p>
+        <p
+          style={{
+            fontFamily: 'var(--font-display)',
+            color: 'var(--color-silver-dark)',
+            fontSize: '0.875rem',
+            letterSpacing: '0.25em',
+            textTransform: 'uppercase',
+            marginBottom: '1.25rem',
+          }}
+        >
+          Cada segundo nos acerca más
+        </p>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '0.75rem',
-          maxWidth: '480px',
-          margin: '0 auto',
-        }}
-      >
-        {units.map((unit) => (
-          <div
-            key={unit.label}
-            style={{
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              padding: '1rem 0.5rem',
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
-            }}
-          >
-            <span
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '0.75rem',
+            maxWidth: '480px',
+            margin: '0 auto',
+          }}
+        >
+          {units.map((unit) => (
+            <div
+              key={unit.label}
               style={{
-                display: 'block',
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.75rem',
-                fontWeight: 600,
-                color: 'var(--text-main)',
-                lineHeight: 1.1,
+                background: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-md)',
+                padding: '1rem 0.5rem',
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
               }}
             >
-              {String(unit.value).padStart(2, '0')}
-            </span>
-            <span
-              style={{
-                display: 'block',
-                fontSize: '0.625rem',
-                letterSpacing: '0.15em',
-                color: 'var(--text-muted)',
-                marginTop: '0.35rem',
-              }}
-            >
-              {unit.label}
-            </span>
-          </div>
-        ))}
-      </div>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '1.75rem',
+                  fontWeight: 600,
+                  color: 'var(--text-main)',
+                  lineHeight: 1.1,
+                }}
+              >
+                {unit.animate ? (
+                  <CountUp
+                    from={0}
+                    to={unit.value}
+                    easing="expo"
+                    duration={2}
+                    trigger="view"
+                    customFormatter={(val) => String(Math.round(val)).padStart(2, '0')}
+                  />
+                ) : (
+                  String(unit.value).padStart(2, '0')
+                )}
+              </span>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '0.625rem',
+                  letterSpacing: '0.15em',
+                  color: 'var(--text-muted)',
+                  marginTop: '0.35rem',
+                }}
+              >
+                {unit.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </FadeContent>
     </section>
   )
 }
