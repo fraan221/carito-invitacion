@@ -1,0 +1,577 @@
+.section {
+  padding: clamp(3.5rem, 8vw, 5.5rem) 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Celestial Charter / Ticket Container */
+.charter {
+  max-width: 600px;
+  margin-inline: auto;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.88) 0%,
+    rgba(5, 8, 20, 0.94) 100%
+  );
+  border: 1px solid var(--border-silver);
+  border-radius: var(--radius-lg);
+  padding: clamp(2rem, 5vw, 3.25rem) clamp(1.25rem, 5vw, 2.5rem);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(226, 232, 240, 0.08) inset;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Celestial starlight hairline rim at the top */
+.charter::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(226, 232, 240, 0.6) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Celestial corner accents */
+.cornerMark {
+  position: absolute;
+  font-size: 0.7rem;
+  color: var(--color-silver-glow);
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.cornerTopLeft {
+  top: 10px;
+  left: 12px;
+}
+
+.cornerTopRight {
+  top: 10px;
+  right: 12px;
+}
+
+.cornerBottomLeft {
+  bottom: 10px;
+  left: 12px;
+}
+
+.cornerBottomRight {
+  bottom: 10px;
+  right: 12px;
+}
+
+/* Header & Title */
+.header {
+  margin-block-end: 1.75rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 4.2vw, 2rem);
+  font-weight: 600;
+  color: var(--color-silver-light);
+  margin: 0;
+  letter-spacing: 0.05em;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+/* Date & Time Monumental Display */
+.dateHerald {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-end: 1.75rem;
+}
+
+.dateStarLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 260px;
+}
+
+.heraldHairline {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-silver) 50%,
+    transparent 100%
+  );
+  opacity: 0.4;
+}
+
+.heraldSymbol {
+  font-size: 0.75rem;
+  color: var(--color-silver-light);
+  opacity: 0.75;
+}
+
+.dateText {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 3.5vw, 1.45rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-silver-light);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--color-silver);
+}
+
+.timeIcon {
+  color: var(--color-silver);
+  flex-shrink: 0;
+}
+
+.timePrimary {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.dotSeparator {
+  opacity: 0.5;
+}
+
+.timePunctuality {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Hairline Divider */
+.divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-silver) 50%,
+    transparent 100%
+  );
+  opacity: 0.3;
+  margin: 0 0 1.75rem 0;
+}
+
+/* Venue Section & Physical Arrival */
+.venueSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  margin-block-end: 1.75rem;
+  text-align: start;
+}
+
+.venueHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.125rem;
+}
+
+.venueIconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(30, 58, 138, 0.25);
+  border: 1px solid var(--border-silver);
+  color: var(--color-silver-light);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(226, 232, 240, 0.12) inset;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.venueHeader:hover .venueIconWrapper {
+  transform: scale(1.05);
+  border-color: var(--color-silver-light);
+  background: rgba(30, 58, 138, 0.4);
+}
+
+.venueMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.venueName {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3.5vw, 1.55rem);
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0 0 0.35rem 0;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
+}
+
+.venueAddress {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-silver);
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Arrival Badges */
+.badgesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-left: 3.875rem;
+}
+
+.arrivalBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--border-subtle);
+  color: var(--color-silver);
+  font-family: var(--font-sans);
+  font-size: 0.775rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Actions Section */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.mainActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+}
+
+/* Base button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  min-height: 48px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-align: center;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.15s ease,
+    color 0.25s ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-silver-light);
+  outline-offset: 3px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Primary variant (Maps) */
+.btnPrimary {
+  background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+  border: 1px solid var(--border-silver);
+  color: var(--text-main);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.btnPrimary:hover {
+  border-color: var(--color-silver-light);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(226, 232, 240, 0.2) inset;
+  transform: translateY(-1px);
+}
+
+/* Secondary variant (Copy address) */
+.btnSecondary {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--color-silver-light);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.btnSecondary:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: var(--border-silver);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.4),
+    0 0 10px rgba(226, 232, 240, 0.15) inset;
+  transform: translateY(-1px);
+}
+
+/* Celestial Sapphire Copy Confirmation State (Eliminates Emerald Green) */
+@keyframes copyPop {
+  0% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btnCopied {
+  background: rgba(30, 58, 138, 0.95);
+  border-color: var(--color-silver-light);
+  color: var(--color-silver-light);
+  box-shadow:
+    0 4px 18px rgba(0, 0, 0, 0.4),
+    0 0 14px rgba(226, 232, 240, 0.3) inset;
+  animation: copyPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btnCopied:hover {
+  background: rgba(37, 99, 235, 0.95);
+  border-color: var(--color-silver-light);
+}
+
+/* Streamlined Calendar Strip */
+.calendarStrip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  padding-block-start: 0.25rem;
+}
+
+.calendarPrompt {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-inline-end: 0.25rem;
+}
+
+.calendarOptions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.calendarPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.875rem;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-subtle);
+  color: var(--color-silver);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.calendarPill:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-silver);
+  color: var(--color-silver-light);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.calendarPill:focus-visible {
+  outline: 2px solid var(--color-silver-light);
+  outline-offset: 2px;
+}
+
+.calendarPill:active {
+  transform: scale(0.97);
+}
+
+.externalIcon {
+  opacity: 0.85;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn:hover .externalIcon,
+.calendarPill:hover .externalIcon {
+  opacity: 1;
+  transform: translate(1px, -1px);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Mobile phones (~375px - 480px) */
+@media (max-width: 480px) {
+  .charter {
+    padding: 1.75rem 1.125rem;
+  }
+
+  .mainActions {
+    grid-template-columns: 1fr;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .calendarStrip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+  }
+
+  .calendarPrompt {
+    text-align: center;
+    margin: 0;
+  }
+
+  .calendarOptions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .calendarPill {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .venueHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .badgesList {
+    padding-left: 0;
+    justify-content: center;
+  }
+}
+
+/* Ultra small viewports (320px - 340px) */
+@media (max-width: 340px) {
+  .charter {
+    padding: 1.25rem 0.875rem;
+  }
+
+  .title {
+    font-size: 1.35rem;
+    margin-block-end: 1.25rem;
+  }
+
+  .dateText {
+    font-size: 1.05rem;
+  }
+
+  .venueName {
+    font-size: 1.25rem;
+  }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnCopied,
+  .calendarPill,
+  .venueIconWrapper,
+  .externalIcon {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* High contrast / forced colors */
+@media (forced-colors: active) {
+  .charter,
+  .btn,
+  .calendarPill,
+  .arrivalBadge,
+  .venueIconWrapper {
+    border: 2px solid ButtonText;
+  }
+
+  .btn:focus-visible,
+  .calendarPill:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}

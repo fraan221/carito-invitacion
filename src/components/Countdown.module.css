@@ -1,0 +1,275 @@
+.section {
+  padding: clamp(3.5rem, 7vw, 5.5rem) 1.5rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+/* Atmospheric celestial aura floating behind the numbers */
+.alignmentWrapper {
+  max-width: 580px;
+  margin-inline: auto;
+  position: relative;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.alignmentWrapper::before {
+  content: "";
+  position: absolute;
+  inset: -10% -15%;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 50%,
+    rgba(30, 58, 138, 0.22) 0%,
+    rgba(15, 23, 42, 0.08) 50%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Heraldic star line above the heading */
+.herald {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 220px;
+  margin-block-end: 1.25rem;
+}
+
+.heraldLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-silver-dark),
+    transparent
+  );
+  opacity: 0.6;
+}
+
+.heraldSymbol {
+  font-size: 0.75rem;
+  color: var(--color-silver);
+  text-shadow: 0 0 10px var(--color-silver-glow);
+}
+
+/* Main Section Heading */
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.8vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-silver);
+  margin-block-start: 0;
+  margin-block-end: clamp(1.75rem, 4vw, 2.5rem);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* The Celestial Alignment: Liquid silver numbers in fluid harmony */
+.alignmentGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2.5vw, 1.25rem);
+  width: 100%;
+}
+
+.unitCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: clamp(54px, 14vw, 84px);
+}
+
+.number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6.5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-silver-light);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 22px var(--color-silver-glow),
+    0 2px 12px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.separator {
+  display: block;
+  font-size: clamp(0.625rem, 1.5vw, 0.8125rem);
+  color: var(--color-silver-dark);
+  opacity: 0.75;
+  user-select: none;
+  margin-bottom: 1.4rem;
+  text-shadow: 0 0 8px var(--color-silver-glow);
+}
+
+.label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: clamp(0.75rem, 1.8vw, 0.8125rem);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: clamp(0.4rem, 1vw, 0.65rem);
+  line-height: 1;
+}
+
+/* Celebration State when countdown expires */
+.celebrationWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 1rem;
+}
+
+.celebrationTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  font-weight: 600;
+  color: var(--color-silver-light);
+  letter-spacing: 0.06em;
+  margin: 0.5rem 0 1rem;
+  text-shadow:
+    0 0 28px var(--color-silver-glow),
+    0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+.celebrationText {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  line-height: 1.7;
+  color: var(--color-silver);
+  max-width: 440px;
+  margin: 0 0 1.75rem;
+}
+
+.celebrationBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(30, 58, 138, 0.35);
+  border: 1px solid var(--border-silver);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-silver-light);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+}
+
+.celebrationDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #60a5fa;
+  box-shadow: 0 0 10px #60a5fa;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+    box-shadow: 0 0 16px #93c5fd;
+  }
+}
+
+/* Accessible Screen Reader Only Utility */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Compact Mobile Screen Refinements (<= 390px) */
+@media (max-width: 390px) {
+  .section {
+    padding: 3rem 0.75rem;
+  }
+
+  .alignmentWrapper {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .alignmentGrid {
+    gap: 0.35rem;
+  }
+
+  .unitCol {
+    min-width: 48px;
+  }
+
+  .number {
+    font-size: 2rem;
+  }
+
+  .separator {
+    margin-bottom: 1.1rem;
+    font-size: 0.55rem;
+  }
+
+  .label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* Accessibility: High contrast / forced colors */
+@media (forced-colors: active) {
+  .heraldLine {
+    background: CanvasText;
+  }
+
+  .heraldSymbol,
+  .separator,
+  .number {
+    color: CanvasText;
+  }
+
+  .celebrationBadge {
+    border-color: CanvasText;
+  }
+
+  .celebrationDot {
+    background: CanvasText;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .celebrationDot {
+    animation: none !important;
+  }
+
+  .number,
+  .celebrationTitle,
+  .heraldSymbol {
+    text-shadow: none !important;
+  }
+}

@@ -1,74 +1,75 @@
-import FadeContent from './FadeContent'
+import FadeContent from "./FadeContent";
+import styles from "./Message.module.css";
 
 export default function Message() {
   return (
     <section
       id="mensaje"
+      role="region"
       aria-label="Mensaje de bienvenida"
-      style={{
-        padding: "5rem 1.5rem",
-        textAlign: "center",
-        position: "relative",
-        zIndex: 1,
-      }}
+      className={styles.section}
     >
       <FadeContent
-        duration={1.2}
-        blur={10}
-        ease="sine.in"
-        staggerFrom="center"
-        disappearEase="expo.in"
+        duration={0.8}
+        blur={false}
+        trigger="mount"
+        ease="power2.out"
       >
-        <div
-          style={{
-            maxWidth: "520px",
-            margin: "0 auto",
-            background: "var(--bg-surface)",
-            border: "1px solid var(--border-subtle)",
-            borderRadius: "var(--radius-lg)",
-            padding: "2.5rem 1.75rem",
-            backdropFilter: "blur(12px)",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-          }}
-        >
-          <span
-            style={{
-              display: "block",
-              fontSize: "1.25rem",
-              color: "var(--color-silver)",
-              marginBottom: "1rem",
-            }}
-            aria-hidden="true"
-          >
-            ✦
-          </span>
+        <div className={styles.editorialFlow}>
+          <h2 className={styles.srOnly}>Mensaje de bienvenida de Carito</h2>
 
-          <blockquote
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(1.0625rem, 2.5vw, 1.25rem)",
-              fontStyle: "italic",
-              lineHeight: 1.8,
-              color: "var(--color-silver-light)",
-              marginBottom: "1.5rem",
-            }}
-          >
-            &ldquo;Hay noches que se vuelven eternas en el corazón, y esta será una
-            de ellas.&rdquo;
+          {/* Celestial heraldic divider */}
+          <div className={styles.herald} aria-hidden="true">
+            <span className={styles.heraldLine} />
+            <span className={styles.heraldSymbol}>✦</span>
+            <span className={styles.heraldLine} />
+          </div>
+
+          {/* Monumental poetic quotation */}
+          <blockquote className={styles.quote}>
+            <span
+              className={`${styles.quoteMark} ${styles.quoteMarkStart}`}
+              aria-hidden="true"
+            >
+              &ldquo;
+            </span>
+            Hay noches que se vuelven eternas en el corazón, y esta será una de
+            ellas.
+            <span
+              className={`${styles.quoteMark} ${styles.quoteMarkEnd}`}
+              aria-hidden="true"
+            >
+              &rdquo;
+            </span>
           </blockquote>
 
-          <p
-            style={{
-              fontSize: "0.9375rem",
-              lineHeight: 1.7,
-              color: "var(--text-muted)",
-            }}
-          >
-            Hoy comienza uno de los capítulos más lindos de mi historia, y quiero
-            compartirlo con las personas que hacen brillar mi vida. Te invito a ser
-            parte de mis 15 años, una noche llena de magia, sueños y momentos que
-            quedarán para siempre en mi memoria.
+          <div
+            className={styles.quoteDivider}
+            role="separator"
+            aria-hidden="true"
+          />
+
+          {/* Intimate invitation letter */}
+          <p className={styles.bodyText}>
+            Hoy comienza uno de los capítulos más lindos de mi historia, y
+            quiero compartirlo con las personas que hacen brillar mi vida. Te
+            invito a ser parte de mis 15 años, una noche llena de magia, sueños
+            y momentos que quedarán para siempre en mi memoria.
           </p>
+
+          {/* Personal signature and authorship */}
+          <footer className={styles.signatureBlock}>
+            <p className={styles.signOff}>Con todo mi amor,</p>
+            <div className={styles.signatureIdentity}>
+              <span className={styles.signatureMark} aria-hidden="true">
+                ✦
+              </span>
+              <span className={styles.signatureName}>Carito</span>
+              <span className={styles.signatureMark} aria-hidden="true">
+                ✦
+              </span>
+            </div>
+          </footer>
         </div>
       </FadeContent>
     </section>

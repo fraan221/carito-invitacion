@@ -1,143 +1,184 @@
-import { useState, useEffect } from 'react'
-import CountUp from './CountUp'
-import FadeContent from './FadeContent'
+import { useState, useEffect } from "react";
+import CountUp from "./CountUp";
+import FadeContent from "./FadeContent";
+import styles from "./Countdown.module.css";
+
+export const DEFAULT_TARGET_DATE = "2027-02-06T21:00:00-03:00";
 
 export interface TimeRemaining {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
-  isExpired: boolean
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  isExpired: boolean;
 }
 
 // oxlint-disable-next-line react/only-export-components
-export function calculateTimeRemaining(targetDate: string | Date, now: Date = new Date()): TimeRemaining {
-  const targetMs = typeof targetDate === 'string' ? new Date(targetDate).getTime() : targetDate.getTime()
-  const diff = targetMs - now.getTime()
+export function calculateTimeRemaining(
+  targetDate: string | Date = DEFAULT_TARGET_DATE,
+  now: Date = new Date(),
+): TimeRemaining {
+  let targetMs: number;
 
-  if (diff <= 0 || isNaN(diff)) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true }
+  if (targetDate instanceof Date) {
+    targetMs = targetDate.getTime();
+  } else if (typeof targetDate === "string") {
+    // If no timezone offset is provided, anchor to Argentina Standard Time (-03:00)
+    const trimmed = targetDate.trim();
+    const hasOffset = /(?:Z|[+-]\d{2}(?::?\d{2})?)$/.test(trimmed);
+    const normalized = hasOffset ? trimmed : `${trimmed}-03:00`;
+    targetMs = new Date(normalized).getTime();
+  } else {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };
   }
 
-  const seconds = Math.floor((diff / 1000) % 60)
-  const minutes = Math.floor((diff / (1000 * 60)) % 60)
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const diff = targetMs - now.getTime();
 
-  return { days, hours, minutes, seconds, isExpired: false }
+  if (isNaN(diff) || diff <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };
+  }
+
+  const seconds = Math.floor((diff / 1000) % 60);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  return { days, hours, minutes, seconds, isExpired: false };
 }
 
 interface CountdownProps {
-  targetDate?: string
+  targetDate?: string;
 }
 
-export default function Countdown({ targetDate = '2027-02-06T21:00:00' }: CountdownProps) {
-  const [timeLeft, setTimeLeft] = useState<TimeRemaining>(() => calculateTimeRemaining(targetDate))
+export default function Countdown({
+  targetDate = DEFAULT_TARGET_DATE,
+}: CountdownProps) {
+  const [timeLeft, setTimeLeft] = useState<TimeRemaining>(() =>
+    calculateTimeRemaining(targetDate),
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeRemaining(targetDate))
-    }, 1000)
+      setTimeLeft(calculateTimeRemaining(targetDate));
+    }, 1000);
 
-    return () => clearInterval(timer)
-  }, [targetDate])
+    return () => clearInterval(timer);
+  }, [targetDate]);
 
   const units = [
-    { label: 'DÍAS', value: timeLeft.days, animate: true },
-    { label: 'HORAS', value: timeLeft.hours, animate: true },
-    { label: 'MINUTOS', value: timeLeft.minutes, animate: true },
-    { label: 'SEGUNDOS', value: timeLeft.seconds, animate: false },
-  ]
+    { label: "Días", value: timeLeft.days, animate: true },
+    { label: "Horas", value: timeLeft.hours, animate: true },
+    { label: "Minutos", value: timeLeft.minutes, animate: true },
+    { label: "Segundos", value: timeLeft.seconds, animate: false },
+  ];
 
   return (
     <section
+      id="countdown"
+      role="region"
       aria-label="Cuenta regresiva"
-      style={{
-        padding: '3rem 1.5rem',
-        textAlign: 'center',
-        position: 'relative',
-        zIndex: 1,
-      }}
+      className={styles.section}
     >
       <FadeContent
-        duration={1.2}
-        blur={10}
-        ease="sine.in"
-        staggerFrom="center"
-        disappearEase="expo.in"
+        duration={0.8}
+        blur={false}
+        trigger="mount"
+        ease="power2.out"
       >
-        <p
-          style={{
-            fontFamily: 'var(--font-display)',
-            color: 'var(--color-silver-dark)',
-            fontSize: '0.875rem',
-            letterSpacing: '0.25em',
-            textTransform: 'uppercase',
-            marginBottom: '1.25rem',
-          }}
-        >
-          Cada segundo nos acerca más
-        </p>
+        <div className={styles.alignmentWrapper}>
+          {timeLeft.isExpired ? (
+            /* Celebration Mode: Party has started or target date reached */
+            <div className={styles.celebrationWrapper}>
+              <div className={styles.herald} aria-hidden="true">
+                <span className={styles.heraldLine} />
+                <span className={styles.heraldSymbol}>✦</span>
+                <span className={styles.heraldLine} />
+              </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '0.75rem',
-            maxWidth: '480px',
-            margin: '0 auto',
-          }}
-        >
-          {units.map((unit) => (
-            <div
-              key={unit.label}
-              style={{
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-md)',
-                padding: '1rem 0.5rem',
-                backdropFilter: 'blur(8px)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
-              }}
-            >
-              <span
-                style={{
-                  display: 'block',
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '1.75rem',
-                  fontWeight: 600,
-                  color: 'var(--text-main)',
-                  lineHeight: 1.1,
-                }}
-              >
-                {unit.animate ? (
-                  <CountUp
-                    from={0}
-                    to={unit.value}
-                    easing="expo"
-                    duration={2}
-                    trigger="view"
-                    customFormatter={(val) => String(Math.round(val)).padStart(2, '0')}
-                  />
-                ) : (
-                  String(unit.value).padStart(2, '0')
-                )}
-              </span>
-              <span
-                style={{
-                  display: 'block',
-                  fontSize: '0.625rem',
-                  letterSpacing: '0.15em',
-                  color: 'var(--text-muted)',
-                  marginTop: '0.35rem',
-                }}
-              >
-                {unit.label}
-              </span>
+              <h2 className={styles.celebrationTitle}>
+                ¡La noche soñada llegó!
+              </h2>
+
+              <p className={styles.celebrationText}>
+                Las estrellas ya brillan sobre Florencio Varela. Te esperamos en
+                Salón BIM para celebrar juntos los 15 de Carito.
+              </p>
+
+              <div className={styles.celebrationBadge}>
+                <span className={styles.celebrationDot} aria-hidden="true" />
+                <span>Celebración en curso</span>
+              </div>
             </div>
-          ))}
+          ) : (
+            /* Active Countdown: Celestial alignment of liquid silver numerals */
+            <>
+              {/* Heraldic divider */}
+              <div className={styles.herald} aria-hidden="true">
+                <span className={styles.heraldLine} />
+                <span className={styles.heraldSymbol}>✦</span>
+                <span className={styles.heraldLine} />
+              </div>
+
+              {/* Accessible and visible headings */}
+              <h2 className={styles.heading} id="countdown-heading">
+                Cada segundo nos acerca más
+              </h2>
+
+              {/* Screen reader narrative announcement */}
+              <p className={styles.srOnly} aria-live="polite">
+                Faltan {timeLeft.days} días, {timeLeft.hours} horas,{" "}
+                {timeLeft.minutes} minutos y {timeLeft.seconds} segundos para
+                la fiesta de 15 de Carito.
+              </p>
+
+              {/* Open celestial alignment: No boxed cards */}
+              <div
+                className={styles.alignmentGrid}
+                role="group"
+                aria-labelledby="countdown-heading"
+              >
+                {units.map((unit, index) => (
+                  <div
+                    key={unit.label}
+                    style={{ display: "contents" }}
+                  >
+                    <div className={styles.unitCol}>
+                      <span className={styles.number} aria-hidden="true">
+                        {unit.animate ? (
+                          <CountUp
+                            from={0}
+                            to={unit.value}
+                            easing="expo"
+                            duration={1.5}
+                            trigger="view"
+                            customFormatter={(val) =>
+                              String(Math.round(val)).padStart(2, "0")
+                            }
+                          />
+                        ) : (
+                          String(unit.value).padStart(2, "0")
+                        )}
+                      </span>
+                      <span className={styles.label} aria-hidden="true">
+                        {unit.label}
+                      </span>
+                    </div>
+
+                    {index < units.length - 1 && (
+                      <span
+                        className={styles.separator}
+                        aria-hidden="true"
+                      >
+                        ✦
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </FadeContent>
     </section>
-  )
+  );
 }

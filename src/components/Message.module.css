@@ -1,0 +1,232 @@
+.section {
+  padding: clamp(4rem, 9vw, 6.5rem) 1.5rem;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Open celestial editorial flow - eliminates the rigid SaaS card box */
+.editorialFlow {
+  max-width: 620px;
+  margin-inline: auto;
+  position: relative;
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 5vw, 2.5rem);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Ethereal celestial aura - soft atmospheric presence without rigid borders */
+.editorialFlow::before {
+  content: "";
+  position: absolute;
+  inset: -10% -15%;
+  background: radial-gradient(
+    ellipse 65% 55% at 50% 50%,
+    rgba(30, 58, 138, 0.2) 0%,
+    rgba(15, 23, 42, 0.08) 45%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Celestial Herald Line at the top */
+.herald {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 240px;
+  margin-block-end: 2rem;
+}
+
+.heraldLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-silver) 50%,
+    transparent 100%
+  );
+  opacity: 0.45;
+}
+
+.heraldSymbol {
+  font-size: 0.8125rem;
+  color: var(--color-silver-light);
+  opacity: 0.85;
+  text-shadow: 0 0 10px var(--color-silver-glow);
+  line-height: 1;
+  user-select: none;
+}
+
+/* Monumental Quote */
+.quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.1875rem, 3.6vw, 1.55rem);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: var(--color-silver-light);
+  margin: 0 0 2rem 0;
+  padding: 0;
+  border: none;
+  text-wrap: balance;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
+}
+
+.quoteMark {
+  display: inline-block;
+  color: var(--color-silver);
+  opacity: 0.6;
+  font-family: var(--font-display);
+  font-size: 1.1em;
+  line-height: 0;
+  vertical-align: -0.1em;
+}
+
+.quoteMarkStart {
+  margin-right: 0.25rem;
+}
+
+.quoteMarkEnd {
+  margin-left: 0.25rem;
+}
+
+/* Subtle editorial divider */
+.quoteDivider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-silver) 50%,
+    transparent 100%
+  );
+  opacity: 0.35;
+  margin: 0 0 1.75rem 0;
+}
+
+/* Intimate Letter Body Text */
+.bodyText {
+  font-family: var(--font-sans);
+  font-size: clamp(0.975rem, 2.4vw, 1.0625rem);
+  line-height: 1.85;
+  font-weight: 400;
+  color: var(--text-main);
+  margin: 0 0 2.25rem 0;
+  max-width: 540px;
+  text-wrap: pretty;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Personal Sign-Off & Authorship Block */
+.signatureBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-block-start: 0.5rem;
+}
+
+.signOff {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--color-silver);
+  opacity: 0.85;
+}
+
+.signatureIdentity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.signatureName {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-silver-light);
+  text-shadow:
+    0 0 16px var(--color-silver-glow),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.signatureMark {
+  font-size: 0.6875rem;
+  color: var(--color-silver);
+  opacity: 0.7;
+}
+
+/* Accessible Screen Reader Only Utility */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Compact Mobile Viewports (<= 480px) */
+@media (max-width: 480px) {
+  .section {
+    padding: clamp(3rem, 7vw, 4.5rem) 1.25rem;
+  }
+
+  .editorialFlow {
+    padding: 1.75rem 0.75rem;
+  }
+
+  .quote {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+  }
+
+  .bodyText {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    margin-bottom: 1.75rem;
+  }
+
+  .signatureName {
+    font-size: 1.35rem;
+  }
+}
+
+/* Accessibility: High contrast / forced colors */
+@media (forced-colors: active) {
+  .heraldLine,
+  .quoteDivider {
+    background: CanvasText;
+  }
+
+  .heraldSymbol,
+  .quoteMark,
+  .signatureMark {
+    color: CanvasText;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .heraldSymbol {
+    text-shadow: none !important;
+  }
+  .signatureName {
+    text-shadow: none !important;
+  }
+}

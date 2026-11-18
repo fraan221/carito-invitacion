@@ -20,8 +20,11 @@ describe('Static Sections', () => {
     it('renders the personal message and invitation text', () => {
       render(<Message />)
       expect(screen.getByRole('region', { name: /mensaje/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { level: 2, name: /mensaje de bienvenida de carito/i })).toBeInTheDocument()
       expect(screen.getByText(/noches que se vuelven eternas/i)).toBeInTheDocument()
       expect(screen.getByText(/mis 15 años/i)).toBeInTheDocument()
+      expect(screen.getByText(/con todo mi amor/i)).toBeInTheDocument()
+      expect(screen.getByText(/^carito$/i)).toBeInTheDocument()
     })
   })
 
