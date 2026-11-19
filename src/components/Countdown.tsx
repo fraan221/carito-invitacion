@@ -101,7 +101,7 @@ export default function Countdown({
 
               <p className={styles.celebrationText}>
                 Las estrellas ya brillan sobre Florencio Varela. Te esperamos en
-                Salón BIM para celebrar juntos los 15 de Carito.
+                Salón Royal Night para celebrar juntos los 15 de Carito.
               </p>
 
               <div className={styles.celebrationBadge}>

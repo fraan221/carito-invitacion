@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { render, screen, act } from '@testing-library/react'
 import Hero from './Hero'
 import Message from './Message'
 import EventDetails from './EventDetails'
@@ -60,11 +60,34 @@ describe('Static Sections', () => {
   })
 
   describe('Closing', () => {
-    it('renders the farewell message and signature', () => {
+    beforeEach(() => {
+      sessionStorage.clear()
+    })
+
+    it('renders the farewell message and signature with default RSVP CTA', () => {
       render(<Closing />)
       expect(screen.getByRole('region', { name: /despedida/i })).toBeInTheDocument()
       expect(screen.getByText(/carolina/i)).toBeInTheDocument()
       expect(screen.getByText(/noche mágica e inolvidable/i)).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /confirmar asistencia/i })).toBeInTheDocument()
+    })
+
+    it('renders confirmed button if session storage indicates RSVP already submitted', () => {
+      sessionStorage.setItem('carito_rsvp_submitted', JSON.stringify({ code: 'test', asiste: true }))
+      render(<Closing />)
+      expect(screen.getByRole('link', { name: /ver estado de confirmación de asistencia/i })).toBeInTheDocument()
+      expect(screen.getByText(/asistencia confirmada/i)).toBeInTheDocument()
+    })
+
+    it('updates dynamically to confirmed state when rsvp:submitted event fires', () => {
+      render(<Closing />)
+      expect(screen.getByText(/confirmar asistencia/i)).toBeInTheDocument()
+
+      act(() => {
+        window.dispatchEvent(new CustomEvent('rsvp:submitted', { detail: { asiste: true } }))
+      })
+
+      expect(screen.getByText(/asistencia confirmada/i)).toBeInTheDocument()
     })
   })
 })

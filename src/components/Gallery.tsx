@@ -1,8 +1,13 @@
-import FadeContent from './FadeContent'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import CircularCarousel, { type CircularCarouselItem } from './CircularCarousel'
+import rawPhotos from '../data/photos.json'
+import styles from './Gallery.module.css'
 
-interface Photo {
+export interface Photo {
+  id?: string
   src: string
   alt: string
+  title?: string
   caption?: string
 }
 
@@ -10,112 +15,176 @@ interface GalleryProps {
   photos?: Photo[]
 }
 
-const DEFAULT_PHOTOS: Photo[] = [
-  {
-    src: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80',
-    alt: 'Milagros Carolina en su sesión de fotos de quince',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-    alt: 'Retrato de Carolina con detalles celestiales',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80',
-    alt: 'Momento especial previo a la celebración',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80',
-    alt: 'Sonrisa y preparativos para los quince',
-  },
-]
+const DEFAULT_PHOTOS: Photo[] = rawPhotos.map((p, index) => ({
+  id: p.id || `photo-${index + 1}`,
+  src: p.src,
+  alt: p.alt || `Momento especial de Carolina - Mis XV`,
+  title: `Recuerdo ${index + 1}`,
+  caption: `Milagros Carolina • Celebración de Mis 15 Años`,
+}))
 
 export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+
+  // Map to CircularCarousel format
+  const carouselItems: CircularCarouselItem[] = useMemo(
+    () =>
+      photos.map((photo, index) => ({
+        src: photo.src,
+        alt: photo.alt,
+        title: photo.title || `Recuerdo ${index + 1}`,
+        subtitle: photo.caption || 'Mis 15 Años',
+      })),
+    [photos]
+  )
+
+  const openLightbox = (_item: CircularCarouselItem, index: number) => {
+    setLightboxIndex(index)
+  }
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null)
+  }, [])
+
+  const nextPhoto = useCallback(() => {
+    if (lightboxIndex === null) return
+    setLightboxIndex((prev) => ((prev! + 1) % photos.length))
+  }, [lightboxIndex, photos.length])
+
+  const prevPhoto = useCallback(() => {
+    if (lightboxIndex === null) return
+    setLightboxIndex((prev) => ((prev! - 1 + photos.length) % photos.length))
+  }, [lightboxIndex, photos.length])
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    if (lightboxIndex === null) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox()
+      if (e.key === 'ArrowRight') nextPhoto()
+      if (e.key === 'ArrowLeft') prevPhoto()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [lightboxIndex, closeLightbox, nextPhoto, prevPhoto])
+
+  const activePhoto = lightboxIndex !== null ? photos[lightboxIndex] : null
+
   return (
     <section
       id="galeria"
-      aria-label="Galería de fotos"
-      style={{
-        padding: '4rem 1.5rem',
-        position: 'relative',
-        zIndex: 1,
-      }}
+      aria-label="Galería de fotos de Carolina"
+      className={styles.section}
     >
-      <FadeContent
-        duration={1.2}
-        blur={10}
-        ease="sine.in"
-        staggerFrom="center"
-        disappearEase="expo.in"
-      >
+      <div className={styles.container}>
+        {/* Celestial heraldic divider */}
+        <div className={styles.herald} aria-hidden="true">
+          <span className={styles.heraldLine} />
+          <span className={styles.heraldSymbol}>✦</span>
+          <span className={styles.heraldLine} />
+        </div>
+
+        <p className={styles.eyebrow}>Momentos Inolvidables</p>
+        <h2 className={styles.title}>Constelación de Recuerdos</h2>
+        <p className={styles.subtitle}>
+          Un recorrido visual por instantes que marcaron mi camino hasta esta noche mágica.
+        </p>
+
+        <div className={styles.carouselWrapper}>
+          <CircularCarousel
+            items={carouselItems}
+            preset="cylinder"
+            intro="rise"
+            cardWidth={210}
+            aspectRatio={0.75}
+            gap={20}
+            curve={1}
+            tilt={-4}
+            autoplay="drift"
+            speed={9}
+            direction="left"
+            draggable={true}
+            momentum={0.65}
+            snap={true}
+            pauseOnHover={true}
+            focusOnClick={true}
+            depthFade={0.6}
+            innerShade={0.5}
+            cornerRadius={16}
+            fadeColor="var(--bg-deep)"
+            captions={false}
+            onItemClick={openLightbox}
+          />
+        </div>
+
+        <div className={styles.swipeCues} aria-hidden="true">
+          <span>‹</span>
+          <span>Arrastrá para girar</span>
+          <span className={styles.swipeCueDot}>✦</span>
+          <span>Tocá para ampliar</span>
+          <span>›</span>
+        </div>
+      </div>
+
+      {/* Accessible Lightbox Modal */}
+      {activePhoto && (
         <div
-          style={{
-            maxWidth: 'var(--max-width-container)',
-            margin: '0 auto',
-            textAlign: 'center',
-          }}
+          className={styles.lightboxOverlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Visualizador de foto ampliada"
+          onClick={closeLightbox}
         >
-          <p
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '0.8125rem',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: 'var(--color-silver-dark)',
-              marginBottom: '0.5rem',
-            }}
-          >
-            Recuerdos
-          </p>
-
-          <h2
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-              color: 'var(--color-silver-light)',
-              marginBottom: '2.5rem',
-              letterSpacing: '0.04em',
-            }}
-          >
-            Galería de Fotos
-          </h2>
-
           <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: '1.25rem',
-            }}
+            className={styles.lightboxContent}
+            onClick={(e) => e.stopPropagation()}
           >
-            {photos.map((photo, index) => (
-              <div
-                key={index}
-                style={{
-                  position: 'relative',
-                  borderRadius: 'var(--radius-md)',
-                  overflow: 'hidden',
-                  aspectRatio: '3 / 4',
-                  background: 'var(--bg-surface)',
-                  border: '1px solid var(--border-subtle)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                }}
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  loading="lazy"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                    transition: 'transform 0.4s ease',
-                  }}
-                />
-              </div>
-            ))}
+            <button
+              type="button"
+              className={styles.lightboxCloseButton}
+              onClick={closeLightbox}
+              aria-label="Cerrar visualizador"
+            >
+              ✕
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.lightboxNavButton} ${styles.lightboxPrev}`}
+              onClick={prevPhoto}
+              aria-label="Foto anterior"
+            >
+              ‹
+            </button>
+
+            <div className={styles.lightboxImageWrapper}>
+              <img
+                src={activePhoto.src}
+                alt={activePhoto.alt}
+                className={styles.lightboxImage}
+              />
+            </div>
+
+            <button
+              type="button"
+              className={`${styles.lightboxNavButton} ${styles.lightboxNext}`}
+              onClick={nextPhoto}
+              aria-label="Foto siguiente"
+            >
+              ›
+            </button>
+
+            <p className={styles.lightboxCaption}>
+              {activePhoto.caption || activePhoto.alt}
+            </p>
+            <span className={styles.lightboxCounter}>
+              {(lightboxIndex ?? 0) + 1} / {photos.length}
+            </span>
           </div>
         </div>
-      </FadeContent>
+      )}
     </section>
   )
 }

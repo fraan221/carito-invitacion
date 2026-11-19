@@ -35,7 +35,7 @@ web (mobile-first)
   - Navegación vertical fluida y transiciones secuenciales entre secciones editoriales orquestadas con GSAP ScrollTrigger.
   - Validación nominal de grupo por parámetro de URL (`?g=CODE`) o ingreso manual de código de pase.
   - Formulario RSVP con control dinámico de cupos máximos y envío directo al backend.
-  - Datos de evento (Salón BIM, Florencio Varela) con apertura directa en Google Maps.
+  - Datos de evento (Salón Royal Night, Florencio Varela) con apertura directa en Google Maps.
   - Copia al portapapeles del alias bancario (`caro.herrera.15`) con feedback visual instantáneo.
   - Cuenta regresiva interactiva y precisa hasta el 6 de febrero de 2027 a las 21:00 hs.
 - Restricciones y decisiones descartadas:
@@ -57,8 +57,8 @@ web (mobile-first)
 ## Evidence on Hand
 
 - Fecha y hora: Sábado 6 de Febrero de 2027, 21:00 a 05:00 hs.
-- Salón: BIM, Cno. Gral. Belgrano 5599, B1888 Florencio Varela, Provincia de Buenos Aires.
-- Enlace Maps confirmado: Google Maps del salón BIM.
+- Salón: Royal Night, Cno. Gral. Belgrano 5599, B1888 Florencio Varela, Provincia de Buenos Aires.
+- Enlace Maps confirmado: Google Maps del salón Royal Night.
 - Alias bancario confirmado: `caro.herrera.15`.
 - Backend Apps Script funcional con tests unitarios (`backend/Code.test.ts`) y fórmulas documentadas (`backend/SHEETS_FORMULAS.md`).
 - Generador de enlaces nominales por lote probado (`scripts/generate-links.ts`).

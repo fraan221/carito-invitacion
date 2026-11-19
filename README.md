@@ -63,7 +63,7 @@ carito-invitacion/
         ├── Hero.tsx             # Portada inmersiva con titular, nombre y fecha
         ├── Message.tsx          # Palabras de dedicatoria y bienvenida
         ├── Countdown.tsx        # Contador regresivo al 06/02/2027 21:00 hs
-        ├── EventDetails.tsx     # Ubicación (Salón BIM), horarios y enlace directo a Google Maps
+        ├── EventDetails.tsx     # Ubicación (Salón Royal Night), horarios y enlace directo a Google Maps
         ├── Gallery.tsx          # Composición visual de fotos
         ├── RSVP.tsx             # Formulario nominal de confirmación con validación de cupos
         ├── Gifts.tsx            # Datos de presentes y alias bancario con botón de copiado

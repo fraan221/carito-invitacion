@@ -1,0 +1,219 @@
+.closing {
+  padding: clamp(4.5rem, 10vw, 7rem) 1.5rem clamp(3.5rem, 8vw, 5.5rem);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.aura {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 65% 55% at 50% 45%,
+    rgba(30, 58, 138, 0.18) 0%,
+    rgba(15, 23, 42, 0.08) 50%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.container {
+  max-width: 520px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+}
+
+/* Herald with celestial lines and roman monogram */
+.herald {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  width: 100%;
+  max-width: 220px;
+}
+
+.heraldLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-silver) 50%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+.heraldMonogram {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--color-silver-light);
+  text-shadow: 0 0 10px var(--color-silver-glow);
+  user-select: none;
+  line-height: 1;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  color: var(--color-silver-light);
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+@supports (-webkit-background-clip: text) {
+  .title {
+    background: linear-gradient(
+      180deg,
+      var(--color-silver-light) 0%,
+      var(--color-silver) 65%,
+      var(--color-silver-dark) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.message {
+  font-family: var(--font-sans);
+  font-size: clamp(0.9375rem, 2.7vw, 1.0625rem);
+  line-height: 1.85;
+  color: var(--text-muted);
+  max-width: 460px;
+  margin: 0 auto;
+  text-wrap: pretty;
+}
+
+.signatureGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.signature {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 3.5vw, 1.35rem);
+  letter-spacing: 0.1em;
+  color: var(--color-silver-light);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin: 0;
+}
+
+.signatureDate {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  color: var(--color-silver-dark);
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-silver) 50%,
+    transparent 100%
+  );
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  opacity: 0.6;
+}
+
+/* Dual-action navigation controls */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.rsvpButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-md);
+  background: rgba(30, 58, 138, 0.35);
+  border: 1px solid var(--border-silver);
+  color: var(--color-silver-light);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px rgba(59, 130, 246, 0.15);
+}
+
+.rsvpButton:hover {
+  background: rgba(30, 58, 138, 0.6);
+  border-color: var(--color-silver);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 18px rgba(59, 130, 246, 0.3);
+}
+
+.rsvpButton:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 3px;
+}
+
+.rsvpButtonConfirmed {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(52, 211, 153, 0.45);
+  color: #ecfdf5;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 14px rgba(16, 185, 129, 0.2);
+}
+
+.rsvpButtonConfirmed:hover {
+  background: rgba(16, 185, 129, 0.32);
+  border-color: rgba(52, 211, 153, 0.7);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 18px rgba(16, 185, 129, 0.35);
+}
+
+.returnLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.returnLink:hover {
+  color: var(--color-silver-light);
+  transform: translateY(-1px);
+}
+
+.returnLink:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 3px;
+}

@@ -40,7 +40,7 @@ Prioritize:
 - Materiality, depth, and atmospheric lighting (deep midnight blue, liquid silver, starfield particles).
 - Cinematic, scroll-driven transitions orchestrated with GSAP.
 - Meaningful microinteractions (haptic feedback feel, subtle hover/tap states, smooth copy-to-clipboard for bank alias).
-- Distinctive visual storytelling across all sections: Hero -> Mensaje -> Cuenta Regresiva -> Detalles del Evento (Salón BIM) -> Galería -> RSVP -> Regalos -> Cierre.
+- Distinctive visual storytelling across all sections: Hero -> Mensaje -> Cuenta Regresiva -> Detalles del Evento (Salón Royal Night) -> Galería -> RSVP -> Regalos -> Cierre.
 
 Do not default to generic SaaS layouts, dashboard patterns, rounded-card grids, or standard AI-generated landing page aesthetics.
 

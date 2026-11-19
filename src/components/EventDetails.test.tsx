@@ -19,7 +19,7 @@ describe('EventDetails (Hardened Resilience & Edge Cases)', () => {
 
       expect(screen.getByRole('region', { name: /detalles del evento y ubicación/i })).toBeInTheDocument();
       expect(screen.getByRole('heading', { level: 2, name: /cuándo y dónde/i })).toBeInTheDocument();
-      expect(screen.getByText(/Salón Royal Night|Salón BIM/i)).toBeInTheDocument();
+      expect(screen.getByText(/Salón Royal Night/i)).toBeInTheDocument();
       expect(screen.getByText(/Florencio Varela/i)).toBeInTheDocument();
       expect(screen.getByText(/Sábado 6 de Febrero de 2027/i)).toBeInTheDocument();
       expect(screen.getByText(/21:00 a 05:00 hs/i)).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('EventDetails (Hardened Resilience & Edge Cases)', () => {
       );
 
       // Should safely fallback to defaults rather than rendering blank text
-      expect(screen.getByText(/Salón Royal Night|Salón BIM/i)).toBeInTheDocument();
+      expect(screen.getByText(/Salón Royal Night/i)).toBeInTheDocument();
       expect(screen.getByText(/Cno\. Gral\. Belgrano 5599/i)).toBeInTheDocument();
       expect(screen.getByText(/Sábado 6 de Febrero de 2027/i)).toBeInTheDocument();
       expect(screen.getByText(/21:00 a 05:00 hs/i)).toBeInTheDocument();
@@ -189,7 +189,7 @@ describe('EventDetails (Hardened Resilience & Edge Cases)', () => {
     it('generates a valid RFC 5545 iCalendar data URI with correct timezone and event details', () => {
       render(
         <EventDetails
-          venue="Salón BIM"
+          venue="Salón Royal Night"
           address="Cno. Gral. Belgrano 5599"
           date="Sábado 6 de Febrero de 2027"
           time="21:00 a 05:00 hs"
@@ -207,7 +207,7 @@ describe('EventDetails (Hardened Resilience & Edge Cases)', () => {
       expect(decodedIcs).toContain('VERSION:2.0');
       expect(decodedIcs).toContain('DTSTART:20270207T000000Z');
       expect(decodedIcs).toContain('DTEND:20270207T080000Z');
-      expect(decodedIcs).toContain('LOCATION:Salón BIM, Cno. Gral. Belgrano 5599');
+      expect(decodedIcs).toContain('LOCATION:Salón Royal Night, Cno. Gral. Belgrano 5599');
       expect(decodedIcs).toContain('END:VCALENDAR');
     });
   });

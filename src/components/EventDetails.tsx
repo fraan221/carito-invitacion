@@ -7,8 +7,8 @@ import {
   Copy,
   Check,
   Download,
-  ShieldCheck,
-  Compass,
+  Shirt,
+  Car,
 } from "lucide-react";
 import FadeContent from "./FadeContent";
 import styles from "./EventDetails.module.css";
@@ -28,9 +28,9 @@ const DEFAULT_ADDRESS =
 const DEFAULT_DATE = "Sábado 6 de Febrero de 2027";
 const DEFAULT_TIME = "21:00 a 05:00 hs";
 const DEFAULT_MAPS_URL =
-  "https://maps.google.com/?q=BIM+Cno+Gral+Belgrano+5599+Florencio+Varela";
+  "https://maps.google.com/?q=Salon+Royal+Night+Cno+Gral+Belgrano+5599+Florencio+Varela";
 const DEFAULT_GCAL_URL =
-  "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+15+%E2%80%94+Milagros+Carolina+Herrera&dates=20270207T000000Z/20270207T080000Z&details=Celebraci%C3%B3n+de+Mis+15+A%C3%B1os+-+Milagros+Carolina+Herrera.+Sal%C3%B3n+BIM.&location=Sal%C3%B3n+BIM%2C+Cno.+Gral.+Belgrano+5599%2C+B1888+Florencio+Varela";
+  "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mis+15+%E2%80%94+Milagros+Carolina+Herrera&dates=20270207T000000Z/20270207T080000Z&details=Celebraci%C3%B3n+de+Mis+15+A%C3%B1os+-+Milagros+Carolina+Herrera.+Sal%C3%B3n+Royal+Night.&location=Sal%C3%B3n+Royal+Night%2C+Cno.+Gral.+Belgrano+5599%2C+B1888+Florencio+Varela";
 
 function sanitizeExternalUrl(
   url: string | undefined,
@@ -176,32 +176,13 @@ export default function EventDetails({
         trigger="mount"
         ease="power2.out"
       >
-        <div className={styles.charter}>
-          {/* Subtle celestial corner accents */}
-          <span
-            className={`${styles.cornerMark} ${styles.cornerTopLeft}`}
-            aria-hidden="true"
-          >
-            ✦
-          </span>
-          <span
-            className={`${styles.cornerMark} ${styles.cornerTopRight}`}
-            aria-hidden="true"
-          >
-            ✦
-          </span>
-          <span
-            className={`${styles.cornerMark} ${styles.cornerBottomLeft}`}
-            aria-hidden="true"
-          >
-            ✦
-          </span>
-          <span
-            className={`${styles.cornerMark} ${styles.cornerBottomRight}`}
-            aria-hidden="true"
-          >
-            ✦
-          </span>
+        <div className={styles.editorialFlow}>
+          {/* Celestial heraldic top line */}
+          <div className={styles.herald} aria-hidden="true">
+            <span className={styles.heraldLine} />
+            <span className={styles.heraldSymbol}>✦</span>
+            <span className={styles.heraldLine} />
+          </div>
 
           {/* Section Heading */}
           <div className={styles.header}>
@@ -215,12 +196,6 @@ export default function EventDetails({
             className={styles.dateHerald}
             aria-label="Fecha y horario del evento"
           >
-            <div className={styles.dateStarLine} aria-hidden="true">
-              <span className={styles.heraldHairline} />
-              <span className={styles.heraldSymbol}>✦</span>
-              <span className={styles.heraldHairline} />
-            </div>
-
             <p className={styles.dateText}>{cleanDate}</p>
 
             <div className={styles.timeRow}>
@@ -229,13 +204,23 @@ export default function EventDetails({
               <span className={styles.dotSeparator} aria-hidden="true">
                 ·
               </span>
-              <span className={styles.timePunctuality}>
-                Recepción y fiesta · Agradecemos puntualidad
+              <span className={styles.dressCode}>
+                <Shirt
+                  size={16}
+                  aria-hidden="true"
+                  className={styles.timeIcon}
+                />
+                <span className={styles.dressCodeText}>Elegante</span>
               </span>
             </div>
           </div>
 
-          <div className={styles.divider} role="separator" aria-hidden="true" />
+          {/* Constellation Divider */}
+          <div className={styles.constellationDivider} aria-hidden="true">
+            <span className={styles.dividerHairline} />
+            <span className={styles.dividerStar}>✦</span>
+            <span className={styles.dividerHairline} />
+          </div>
 
           {/* Venue & Physical Arrival Information */}
           <div className={styles.venueSection} aria-label="Lugar y dirección">
@@ -245,71 +230,67 @@ export default function EventDetails({
               </span>
               <div className={styles.venueMeta}>
                 <h3 className={styles.venueName}>{cleanVenue}</h3>
-                <p className={styles.venueAddress}>{cleanAddress}</p>
+
+                {/* Effortless tactile copy interaction */}
+                <button
+                  type="button"
+                  onClick={handleCopyAddress}
+                  aria-label={
+                    copiedAddress
+                      ? "Dirección copiada al portapapeles"
+                      : `Copiar dirección: ${cleanAddress}`
+                  }
+                  className={`${styles.addressCopyButton} ${
+                    copiedAddress ? styles.addressCopied : ""
+                  }`}
+                >
+                  <span className={styles.venueAddress}>{cleanAddress}</span>
+                  <span className={styles.copyPill} aria-hidden="true">
+                    {copiedAddress ? (
+                      <>
+                        <Check size={14} className={styles.copyPillIcon} />
+                        <span>¡Dirección copiada!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={14} className={styles.copyPillIcon} />
+                        <span>Copiar dirección</span>
+                      </>
+                    )}
+                  </span>
+                </button>
               </div>
             </div>
 
-            {/* Arrival Badges */}
-            <div
-              className={styles.badgesList}
-              aria-label="Detalles prácticos de llegada"
-            >
-              <span className={styles.arrivalBadge}>
-                <ShieldCheck size={13} aria-hidden="true" />
-                <span>Estacionamiento privado</span>
-              </span>
-              <span className={styles.arrivalBadge}>
-                <Compass size={13} aria-hidden="true" />
-                <span>Zona Sur · Buenos Aires</span>
-              </span>
-            </div>
+            {/* Hospitality amenity note */}
+            <p className={styles.amenityNote}>
+              <Car
+                size={16}
+                aria-hidden="true"
+                className={styles.amenityIcon}
+              />
+              <span>Estacionamiento</span>
+            </p>
           </div>
 
-          <div className={styles.divider} role="separator" aria-hidden="true" />
-
-          {/* Actions & Calendar Utilities */}
+          {/* Monumental Primary CTA & Streamlined Calendar */}
           <div className={styles.actions}>
-            <div className={styles.mainActions}>
-              <a
-                href={safeMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Cómo llegar a ${cleanVenue} en Google Maps (se abre en nueva pestaña)`}
-                className={`${styles.btn} ${styles.btnPrimary}`}
-              >
-                <MapPin size={18} aria-hidden="true" />
-                <span>Cómo llegar</span>
-                <ExternalLink
-                  size={15}
-                  aria-hidden="true"
-                  className={styles.externalIcon}
-                />
-              </a>
+            <a
+              href={safeMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Cómo llegar a ${cleanVenue} en Google Maps (se abre en nueva pestaña)`}
+              className={`${styles.btn} ${styles.btnPrimary}`}
+            >
+              <MapPin size={18} aria-hidden="true" />
+              <span>Cómo llegar</span>
+              <ExternalLink
+                size={15}
+                aria-hidden="true"
+                className={styles.externalIcon}
+              />
+            </a>
 
-              <button
-                type="button"
-                onClick={handleCopyAddress}
-                aria-label={
-                  copiedAddress
-                    ? "Dirección copiada al portapapeles"
-                    : "Copiar dirección para Uber, Cabify o Waze"
-                }
-                className={`${styles.btn} ${styles.btnSecondary} ${
-                  copiedAddress ? styles.btnCopied : ""
-                }`}
-              >
-                {copiedAddress ? (
-                  <Check size={18} aria-hidden="true" />
-                ) : (
-                  <Copy size={18} aria-hidden="true" />
-                )}
-                <span>
-                  {copiedAddress ? "¡Dirección copiada!" : "Copiar dirección"}
-                </span>
-              </button>
-            </div>
-
-            {/* Streamlined Calendar Options (no technical .ics in human visual label) */}
             <div className={styles.calendarStrip}>
               <span className={styles.calendarPrompt}>Agendar fecha:</span>
               <div className={styles.calendarOptions}>
@@ -320,10 +301,10 @@ export default function EventDetails({
                   aria-label="Agendar fiesta en Google Calendar (se abre en nueva pestaña)"
                   className={styles.calendarPill}
                 >
-                  <CalendarPlus size={15} aria-hidden="true" />
+                  <CalendarPlus size={14} aria-hidden="true" />
                   <span>Google Calendar</span>
                   <ExternalLink
-                    size={12}
+                    size={11}
                     aria-hidden="true"
                     className={styles.externalIcon}
                   />
@@ -335,8 +316,8 @@ export default function EventDetails({
                   aria-label="Descargar recordatorio Apple / iCal (.ics) para Apple Calendar y Outlook"
                   className={styles.calendarPill}
                 >
-                  <Download size={15} aria-hidden="true" />
-                  <span>Apple / iCal</span>
+                  <Download size={14} aria-hidden="true" />
+                  <span>Apple / iCal (.ics)</span>
                 </a>
               </div>
             </div>

@@ -10,6 +10,7 @@ describe('RSVP Component', () => {
 
   beforeEach(() => {
     vi.restoreAllMocks()
+    sessionStorage.clear()
     Object.defineProperty(window, 'location', {
       value: {
         ...originalLocation,

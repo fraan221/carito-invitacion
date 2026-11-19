@@ -1,94 +1,107 @@
+import { useState, useEffect } from 'react'
+import { ArrowUp, Check } from 'lucide-react'
 import FadeContent from './FadeContent'
+import styles from './Closing.module.css'
 
 export default function Closing() {
+  const [rsvpStatus, setRsvpStatus] = useState<{ submitted: boolean; asiste: boolean } | null>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const stored = sessionStorage.getItem('carito_rsvp_submitted')
+        if (stored) {
+          const parsed = JSON.parse(stored)
+          return {
+            submitted: true,
+            asiste: parsed.asiste !== false,
+          }
+        }
+      }
+    } catch {
+      // Ignore storage read error
+    }
+    return null
+  })
+
+  useEffect(() => {
+    const handleRsvpSubmitted = (e: Event) => {
+      const customEvent = e as CustomEvent<{ asiste?: boolean }>
+      setRsvpStatus({
+        submitted: true,
+        asiste: customEvent.detail?.asiste !== false,
+      })
+    }
+
+    const handleRsvpReset = () => {
+      setRsvpStatus(null)
+    }
+
+    window.addEventListener('rsvp:submitted', handleRsvpSubmitted)
+    window.addEventListener('rsvp:reset', handleRsvpReset)
+    return () => {
+      window.removeEventListener('rsvp:submitted', handleRsvpSubmitted)
+      window.removeEventListener('rsvp:reset', handleRsvpReset)
+    }
+  }, [])
+
   return (
     <footer
+      id="despedida"
       role="region"
       aria-label="Despedida y agradecimiento"
-      style={{
-        padding: "5rem 1.5rem 4rem",
-        textAlign: "center",
-        position: "relative",
-        zIndex: 1,
-      }}
+      className={styles.closing}
     >
+      <div className={styles.aura} aria-hidden="true" />
+
       <FadeContent
         duration={1.2}
         blur={10}
         ease="sine.in"
         staggerFrom="center"
-        disappearEase="expo.in"
       >
-        <div
-          style={{
-            maxWidth: "520px",
-            margin: "0 auto",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "1.25rem",
-          }}
-        >
-          <span
-            style={{
-              fontSize: "1.25rem",
-              color: "var(--color-silver)",
-            }}
-            aria-hidden="true"
-          >
-            ✦ ✦ ✦
-          </span>
+        <div className={styles.container}>
+          <div className={styles.herald} aria-hidden="true">
+            <span className={styles.heraldLine} />
+            <span className={styles.heraldMonogram}>XV</span>
+            <span className={styles.heraldLine} />
+          </div>
 
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(1.5rem, 4vw, 2.25rem)",
-              color: "var(--color-silver-light)",
-              letterSpacing: "0.05em",
-            }}
-          >
-            ¡Te Espero!
-          </h2>
+          <h2 className={styles.title}>¡Te Espero!</h2>
 
-          <p
-            style={{
-              fontSize: "1rem",
-              lineHeight: 1.8,
-              color: "var(--text-muted)",
-              maxWidth: "440px",
-            }}
-          >
-            Espero que puedas acompañarme en esta noche tan especial, donde los
-            sueños se vuelven recuerdos y las estrellas, testigos de mi felicidad.
-            Tu presencia hará que este momento brille todavía más. ¡Te espero para
-            compartir una noche mágica e inolvidable!
+          <p className={styles.message}>
+            Deseo de corazón que puedas acompañarme en esta velada tan especial,
+            donde los sueños se transforman en recuerdos y las estrellas son
+            testigos de mi felicidad. Tu presencia hará que este momento
+            resplandezca aún más en una noche mágica e inolvidable.
           </p>
 
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "1.25rem",
-              letterSpacing: "0.15em",
-              color: "var(--color-silver)",
-              marginTop: "1rem",
-              textTransform: "uppercase",
-            }}
-          >
-            Milagros Carolina
-          </p>
+          <div className={styles.signatureGroup}>
+            <p className={styles.signature}>Milagros Carolina</p>
+            <span className={styles.signatureDate}>06 · FEBRERO · 2027</span>
+          </div>
 
-          <div
-            style={{
-              width: "40px",
-              height: "1px",
-              background:
-                "linear-gradient(90deg, transparent, var(--color-silver), transparent)",
-              marginTop: "0.5rem",
-            }}
-            aria-hidden="true"
-          />
+          <div className={styles.divider} aria-hidden="true" />
+
+          <div className={styles.actions}>
+            {rsvpStatus?.submitted ? (
+              <a
+                href="#rsvp"
+                className={`${styles.rsvpButton} ${styles.rsvpButtonConfirmed}`}
+                aria-label="Ver estado de confirmación de asistencia"
+              >
+                <Check size={16} aria-hidden="true" />
+                {rsvpStatus.asiste ? 'Asistencia Confirmada' : 'Respuesta Registrada'}
+              </a>
+            ) : (
+              <a href="#rsvp" className={styles.rsvpButton}>
+                Confirmar Asistencia
+              </a>
+            )}
+            <a href="#hero" className={styles.returnLink}>
+              Volver al inicio <ArrowUp size={14} aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </FadeContent>
     </footer>
-  );
+  )
 }

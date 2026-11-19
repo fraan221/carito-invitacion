@@ -1,0 +1,240 @@
+.section {
+  position: relative;
+  padding: 5rem 1rem 4rem;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.container {
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+/* Celestial heraldic divider */
+.herald {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.heraldLine {
+  width: 42px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-silver), transparent);
+}
+
+.heraldSymbol {
+  font-size: 0.8125rem;
+  color: var(--color-silver);
+  text-shadow: 0 0 10px var(--color-silver-glow);
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-silver-dark);
+  margin: 0 0 0.5rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--color-silver-light);
+  margin: 0 0 0.75rem;
+  text-shadow: 0 0 25px rgba(226, 232, 240, 0.25);
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  max-width: 440px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.carouselWrapper {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  margin: 0 auto;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(circle at center, rgba(30, 58, 138, 0.15) 0%, transparent 70%);
+}
+
+@media (min-width: 768px) {
+  .carouselWrapper {
+    height: 540px;
+  }
+}
+
+.swipeCues {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-silver-dark);
+}
+
+.swipeCueDot {
+  color: var(--color-silver);
+  opacity: 0.7;
+}
+
+/* Lightbox Modal */
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(5, 8, 20, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.lightboxContent {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.lightboxImageWrapper {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-silver);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--color-primary-glow);
+  max-height: 72vh;
+}
+
+.lightboxImage {
+  display: block;
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+}
+
+.lightboxCaption {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  letter-spacing: 0.1em;
+  color: var(--color-silver-light);
+  text-align: center;
+}
+
+.lightboxCounter {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  letter-spacing: 0.15em;
+}
+
+.lightboxCloseButton {
+  position: absolute;
+  top: -3.5rem;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  color: var(--color-silver-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lightboxCloseButton:hover,
+.lightboxCloseButton:focus-visible {
+  background: var(--bg-surface-elevated);
+  border-color: var(--color-silver);
+  transform: scale(1.05);
+}
+
+.lightboxNavButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  color: var(--color-silver-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.lightboxNavButton:hover,
+.lightboxNavButton:focus-visible {
+  background: var(--bg-surface-elevated);
+  border-color: var(--color-silver);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightboxPrev {
+  left: -1rem;
+}
+
+.lightboxNext {
+  right: -1rem;
+}
+
+@media (min-width: 640px) {
+  .lightboxPrev {
+    left: -3.5rem;
+  }
+  .lightboxNext {
+    right: -3.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
