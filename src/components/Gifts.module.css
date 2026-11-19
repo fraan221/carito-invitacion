@@ -1,0 +1,454 @@
+.section {
+  padding: clamp(4rem, 9vw, 6.5rem) 1.5rem;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Open celestial editorial flow - zero opaque card box, seamless cosmic immersion */
+.editorialFlow {
+  max-width: 580px;
+  margin-inline: auto;
+  position: relative;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2rem);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Ethereal celestial aura - soft atmospheric glow that lets the starfield canvas pass through */
+.editorialFlow::before {
+  content: "";
+  position: absolute;
+  inset: -12% -18%;
+  background: radial-gradient(
+    ellipse 65% 55% at 50% 50%,
+    rgba(30, 58, 138, 0.22) 0%,
+    rgba(15, 23, 42, 0.08) 45%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Celestial Herald Line */
+.herald {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 220px;
+  margin-block-end: 1.5rem;
+}
+
+.heraldLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-silver) 50%,
+    transparent 100%
+  );
+  opacity: 0.4;
+}
+
+.heraldSymbol {
+  font-size: 0.8125rem;
+  color: var(--color-silver-light);
+  opacity: 0.85;
+  text-shadow: 0 0 10px var(--color-silver-glow);
+  line-height: 1;
+  user-select: none;
+}
+
+/* Title */
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  color: var(--color-silver-light);
+  margin: 0 0 1rem 0;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  text-wrap: balance;
+  text-shadow:
+    0 0 18px var(--color-silver-glow),
+    0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Description / Letter Note */
+.description {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+  line-height: 1.8;
+  font-weight: 400;
+  color: var(--text-main);
+  margin: 0 0 2rem 0;
+  max-width: 480px;
+  text-wrap: pretty;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* 3-Pill Interactive Selector Group */
+.pillGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.6rem, 2.2vw, 0.85rem);
+  width: 100%;
+  max-width: 540px;
+  margin: 0 0 1.5rem 0;
+}
+
+.pill {
+  min-height: 48px;
+  min-width: 44px;
+  padding: 0.65rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid var(--border-silver);
+  border-radius: 9999px;
+  color: var(--color-silver-light);
+  font-family: var(--font-sans);
+  font-size: clamp(0.8125rem, 2.2vw, 0.875rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.15s ease,
+    box-shadow 0.25s ease,
+    color 0.25s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.pill:hover {
+  background: rgba(30, 58, 138, 0.45);
+  border-color: var(--color-silver-light);
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    0 0 12px rgba(59, 130, 246, 0.25);
+}
+
+.pill:active {
+  transform: translateY(0);
+}
+
+.pillActive {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 58, 138, 0.85) 0%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
+  border-color: var(--color-silver-light);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow:
+    0 0 16px rgba(59, 130, 246, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.pillText {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Guidance note on unselected state */
+.guidanceNote {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0.5rem 0 1.5rem 0;
+  opacity: 0.85;
+}
+
+/* Reveal transition wrapper */
+.revealWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInReveal 0.35s ease forwards;
+}
+
+@keyframes fadeInReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Confirmation message pill for non-transfer options */
+.confirmationNote {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.8rem 1.6rem;
+  margin: 0.75rem 0 0.5rem 0;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 58, 138, 0.35) 0%,
+    rgba(15, 23, 42, 0.7) 100%
+  );
+  border: 1px solid var(--border-silver);
+  border-radius: 9999px;
+  color: var(--color-silver-light);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.confirmationIcon {
+  color: #93c5fd;
+  font-weight: bold;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.confirmationText {
+  letter-spacing: 0.02em;
+}
+
+/* Celestial Alias Constellation - floating and unboxed */
+.aliasBlock {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  position: relative;
+  padding: 1.5rem 1rem;
+}
+
+/* Subtle hairline divider framing the constellation */
+.aliasBlock::before,
+.aliasBlock::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-silver) 50%,
+    transparent 100%
+  );
+  opacity: 0.35;
+}
+
+.aliasLabel {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-silver-dark);
+  opacity: 0.9;
+}
+
+.aliasValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4.5vw, 1.85rem);
+  font-weight: 600;
+  color: var(--color-silver-light);
+  letter-spacing: 0.1em;
+  text-shadow:
+    0 0 22px var(--color-silver-glow),
+    0 2px 8px rgba(0, 0, 0, 0.6);
+  user-select: all;
+  transition: color 0.25s ease;
+}
+
+/* Account Reassurance Line */
+.reassurance {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin-block-end: 0.25rem;
+}
+
+.reassuranceDot {
+  opacity: 0.5;
+  user-select: none;
+}
+
+.reassuranceEntity {
+  color: var(--color-silver);
+  font-weight: 500;
+}
+
+/* Spark Container */
+.sparkWrapper {
+  display: inline-flex;
+  justify-content: center;
+  margin-block-start: 0.5rem;
+}
+
+/* Refined Copy Button */
+.copyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0.75rem 1.75rem;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 58, 138, 0.45) 0%,
+    rgba(15, 23, 42, 0.65) 100%
+  );
+  color: var(--color-silver-light);
+  border: 1px solid var(--border-silver);
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.15s ease,
+    box-shadow 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.copyButton:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.45) 0%,
+    rgba(30, 58, 138, 0.75) 100%
+  );
+  border-color: var(--color-silver-light);
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.35),
+    0 0 12px var(--color-primary-glow);
+}
+
+.copyButton:active {
+  transform: translateY(0);
+}
+
+.copyButtonCopied {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 58, 138, 0.8) 0%,
+    rgba(15, 23, 42, 0.9) 100%
+  );
+  border-color: var(--color-silver-light);
+  color: var(--color-silver-light);
+  box-shadow:
+    0 0 20px rgba(59, 130, 246, 0.45),
+    0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.buttonIcon {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+/* Subtle Guidance / Instructions */
+.instructions {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 1.5rem 0 0 0;
+  max-width: 420px;
+  opacity: 0.85;
+}
+
+/* Accessibility: High contrast / forced colors */
+@media (forced-colors: active) {
+  .heraldLine,
+  .aliasBlock::before,
+  .aliasBlock::after {
+    background: CanvasText;
+  }
+
+  .heraldSymbol,
+  .aliasLabel,
+  .aliasValue,
+  .copyButton,
+  .pill,
+  .confirmationNote {
+    color: CanvasText;
+    border-color: CanvasText;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .title,
+  .heraldSymbol,
+  .aliasValue,
+  .copyButton,
+  .pill,
+  .confirmationNote,
+  .revealWrapper {
+    text-shadow: none !important;
+    box-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Mobile responsive adjustments (<= 480px) */
+@media (max-width: 480px) {
+  .section {
+    padding: clamp(3rem, 7vw, 4.5rem) 1.25rem;
+  }
+
+  .editorialFlow {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .pillGroup {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .pill {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .aliasBlock {
+    padding: 1.25rem 0.5rem;
+  }
+
+  .aliasValue {
+    font-size: 1.35rem;
+  }
+
+  .copyButton {
+    width: 100%;
+    max-width: 280px;
+  }
+}

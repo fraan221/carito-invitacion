@@ -1,207 +1,284 @@
-import { useState } from 'react'
-import { Gift, Copy, Check } from 'lucide-react'
-import FadeContent from './FadeContent'
-import ClickSpark from './ClickSpark'
+import { useState } from "react";
+import { Copy, Check } from "lucide-react";
+import FadeContent from "./FadeContent";
+import ClickSpark from "./ClickSpark";
+import { submitGiftPreference } from "../api";
+import type { GiftPreferenceType } from "../types";
+import styles from "./Gifts.module.css";
 
-interface GiftsProps {
-  alias?: string
+export interface GiftsProps {
+  alias?: string;
+  groupCode?: string;
 }
 
-export default function Gifts({ alias = 'caro.herrera.15' }: GiftsProps) {
-  const [copied, setCopied] = useState(false)
+interface GiftOption {
+  id: GiftPreferenceType;
+  label: string;
+}
+
+const GIFT_OPTIONS: GiftOption[] = [
+  { id: "transferencia", label: "✦ Transferencia MP" },
+  { id: "efectivo", label: "✉️ Efectivo en fiesta" },
+  { id: "fisico", label: "🎁 Regalo físico" },
+];
+
+export default function Gifts({
+  alias = "caro.herrera.15",
+  groupCode,
+}: GiftsProps) {
+  const [copied, setCopied] = useState(false);
+
+  const effectiveGroupCode =
+    groupCode !== undefined && groupCode !== null && groupCode !== ""
+      ? groupCode
+      : typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search).get("g") ?? ""
+      : "";
+
+  const storageKey = effectiveGroupCode
+    ? `carito_gift_pref_${effectiveGroupCode}`
+    : "carito_gift_pref";
+
+  const [selectedGift, setSelectedGift] = useState<GiftPreferenceType | null>(
+    () => {
+      if (typeof window === "undefined") return null;
+      try {
+        const saved = sessionStorage.getItem(storageKey);
+        if (
+          saved === "transferencia" ||
+          saved === "efectivo" ||
+          saved === "fisico"
+        ) {
+          return saved;
+        }
+      } catch {
+        // Silently ignore storage access errors
+      }
+      return null;
+    }
+  );
+
+  const handleSelectOption = (option: GiftPreferenceType) => {
+    setSelectedGift(option);
+    try {
+      sessionStorage.setItem(storageKey, option);
+    } catch {
+      // Silently ignore storage access errors
+    }
+
+    if (effectiveGroupCode.trim()) {
+      submitGiftPreference(effectiveGroupCode, option).catch(() => {
+        // Silently swallow network errors so UI remains uninterrupted
+      });
+    }
+  };
 
   const handleCopy = async () => {
+    let success = false;
+
+    // Modern asynchronous clipboard API
     try {
-      // shortcut: uses navigator.clipboard directly without textarea fallback, upgrade if insecure/legacy contexts are needed
-      await navigator.clipboard.writeText(alias)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(alias);
+        success = true;
+      }
     } catch {
-      // Silent catch if clipboard permission is denied
+      // Modern clipboard API blocked (common in restricted in-app mobile webviews)
+      success = false;
     }
-  }
+
+    // Resilient fallback for restricted webviews or environments
+    if (!success && typeof document !== "undefined") {
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = alias;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        textarea.style.pointerEvents = "none";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        success = document.execCommand("copy");
+        document.body.removeChild(textarea);
+      } catch {
+        success = false;
+      }
+    }
+
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <section
       id="regalos"
       role="region"
       aria-label="Regalos y transferencias"
-      style={{
-        padding: '4rem 1.5rem',
-        position: 'relative',
-        zIndex: 1,
-      }}
+      className={styles.section}
     >
       <FadeContent
-        duration={1.2}
-        blur={10}
-        ease="sine.in"
-        staggerFrom="center"
-        disappearEase="expo.in"
+        duration={1.0}
+        blur={false}
+        trigger="mount"
+        ease="power2.out"
       >
-        <div
-          style={{
-            maxWidth: '520px',
-            margin: '0 auto',
-            background: 'var(--bg-surface)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '2.5rem 1.75rem',
-            backdropFilter: 'blur(12px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1.25rem',
-          }}
-        >
-          <div
-            style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '50%',
-              background: 'rgba(59, 130, 246, 0.15)',
-              border: '1px solid var(--border-silver)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--color-silver-light)',
-            }}
-            aria-hidden="true"
-          >
-            <Gift size={24} />
+        <div className={styles.editorialFlow}>
+          {/* Celestial heraldic divider */}
+          <div className={styles.herald} aria-hidden="true">
+            <span className={styles.heraldLine} />
+            <span className={styles.heraldSymbol}>✦</span>
+            <span className={styles.heraldLine} />
           </div>
 
-          <p
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '0.8125rem',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: 'var(--color-silver-dark)',
-              margin: 0,
-            }}
-          >
-            Un Detalle Especial
+          <h2 className={styles.title}>Regalos</h2>
+
+          <p className={styles.description}>
+            Tu presencia es el regalo más importante para mí. Si deseás hacerme
+            un presente, podés elegir la modalidad que prefieras:
           </p>
 
-          <h2
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-              color: 'var(--color-silver-light)',
-              margin: 0,
-              letterSpacing: '0.04em',
-            }}
-          >
-            Regalos
-          </h2>
-
-          <p
-            style={{
-              fontSize: '0.95rem',
-              lineHeight: 1.6,
-              color: 'var(--text-muted)',
-              margin: 0,
-              maxWidth: '420px',
-            }}
-          >
-            Tu presencia es el regalo más importante para mí. Si deseás hacerme un presente,
-            podés colaborar mediante una transferencia a mi cuenta:
-          </p>
-
+          {/* 3-Pill Interactive Celestial Selector */}
           <div
-            style={{
-              width: '100%',
-              background: 'var(--bg-deep)',
-              border: '1px dashed var(--border-silver)',
-              borderRadius: 'var(--radius-md)',
-              padding: '1.25rem 1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.75rem',
-            }}
+            className={styles.pillGroup}
+            role="group"
+            aria-label="Modalidad de regalo"
           >
-            <span
-              style={{
-                fontSize: '0.75rem',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'var(--text-muted)',
-              }}
-            >
-              Alias Mercado Pago
-            </span>
-
-            <span
-              style={{
-                fontFamily: 'monospace',
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                color: 'var(--color-silver-light)',
-                letterSpacing: '0.05em',
-              }}
-            >
-              {alias}
-            </span>
-
-            <ClickSpark
-              sparkColor={['#f8fafc', '#60a5fa', '#93c5fd', '#cbd5e1']}
-              shape="star"
-              sparkSize={14}
-              sparkCount={8}
-              sparkRadius={35}
-            >
-              <button
-                type="button"
-                onClick={handleCopy}
-                aria-label={copied ? '¡Copiado!' : 'Copiar alias'}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  marginTop: '0.5rem',
-                  padding: '0.75rem 1.5rem',
-                  background: copied ? 'var(--color-primary-dark)' : 'var(--color-primary)',
-                  color: 'var(--color-silver-light)',
-                  border: '1px solid var(--border-silver)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'background-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease, border-color 0.25s ease',
-                  boxShadow: copied ? '0 0 16px rgba(34, 197, 94, 0.4)' : '0 4px 16px rgba(0, 0, 0, 0.25)',
-                }}
-              >
-                {copied ? (
-                  <>
-                    <Check size={16} />
-                    <span>¡Copiado!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy size={16} />
-                    <span>Copiar Alias</span>
-                  </>
-                )}
-              </button>
-            </ClickSpark>
+            {GIFT_OPTIONS.map((opt) => {
+              const isSelected = selectedGift === opt.id;
+              return (
+                <ClickSpark
+                  key={opt.id}
+                  sparkColor={["#f8fafc", "#e2e8f0", "#93c5fd", "#3b82f6"]}
+                  shape="star"
+                  sparkSize={12}
+                  sparkCount={6}
+                  sparkRadius={28}
+                  style={{ display: "inline-flex" }}
+                >
+                  <button
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => handleSelectOption(opt.id)}
+                    className={`${styles.pill} ${
+                      isSelected ? styles.pillActive : ""
+                    }`}
+                  >
+                    <span className={styles.pillText}>{opt.label}</span>
+                  </button>
+                </ClickSpark>
+              );
+            })}
           </div>
 
-          <p
-            style={{
-              fontSize: '0.8125rem',
-              color: 'var(--text-muted)',
-              margin: 0,
-              lineHeight: 1.5,
-            }}
-          >
-            Instrucciones: Abrí tu app bancaria o billetera virtual, seleccioná transferir y pegá el alias.
-          </p>
+          {/* Initial state: Guidance note */}
+          {!selectedGift && (
+            <p className={styles.guidanceNote}>
+              Seleccioná una opción para conocer los detalles.
+            </p>
+          )}
+
+          {/* Option: Transferencia MP (Reveals alias constellation) */}
+          {selectedGift === "transferencia" && (
+            <div className={styles.revealWrapper}>
+              <div className={styles.aliasBlock}>
+                <span className={styles.aliasLabel}>Alias Mercado Pago</span>
+
+                <span className={styles.aliasValue}>{alias}</span>
+
+                <div className={styles.reassurance}>
+                  <span>Titular: Carolina Herrera</span>
+                  <span className={styles.reassuranceDot} aria-hidden="true">
+                    ·
+                  </span>
+                  <span className={styles.reassuranceEntity}>Mercado Pago</span>
+                </div>
+
+                <div className={styles.sparkWrapper}>
+                  <ClickSpark
+                    sparkColor={["#f8fafc", "#e2e8f0", "#93c5fd", "#3b82f6"]}
+                    shape="star"
+                    sparkSize={14}
+                    sparkCount={8}
+                    sparkRadius={35}
+                    style={{
+                      display: "inline-flex",
+                      width: "auto",
+                      height: "auto",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={handleCopy}
+                      aria-label={copied ? "¡Copiado!" : "Copiar alias"}
+                      className={`${styles.copyButton} ${
+                        copied ? styles.copyButtonCopied : ""
+                      }`}
+                    >
+                      {copied ? (
+                        <>
+                          <Check
+                            size={16}
+                            className={styles.buttonIcon}
+                            aria-hidden="true"
+                          />
+                          <span>¡Copiado!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy
+                            size={16}
+                            className={styles.buttonIcon}
+                            aria-hidden="true"
+                          />
+                          <span>Copiar Alias</span>
+                        </>
+                      )}
+                    </button>
+                  </ClickSpark>
+                </div>
+              </div>
+
+              <p className={styles.instructions}>
+                Podés transferir desde cualquier app bancaria o billetera virtual
+                pegando este alias.
+              </p>
+            </div>
+          )}
+
+          {/* Options: Efectivo o Regalo Físico (Confirmation message) */}
+          {(selectedGift === "efectivo" || selectedGift === "fisico") && (
+            <div className={styles.revealWrapper}>
+              <div className={styles.confirmationNote} role="status">
+                <span className={styles.confirmationIcon} aria-hidden="true">
+                  ✓
+                </span>
+                <span className={styles.confirmationText}>
+                  Preferencia registrada. ¡Muchas gracias!
+                </span>
+              </div>
+
+              {selectedGift === "efectivo" ? (
+                <p className={styles.instructions}>
+                  Habrá un buzón especial en la recepción del salón para sobres y
+                  buenos deseos.
+                </p>
+              ) : (
+                <p className={styles.instructions}>
+                  Habrá un espacio reservado en la recepción del salón para
+                  recibir presentes y obsequios.
+                </p>
+              )}
+            </div>
+          )}
+
+          <span className="sr-only" aria-live="polite">
+            {copied ? `Alias ${alias} copiado al portapapeles` : ""}
+          </span>
         </div>
       </FadeContent>
     </section>
-  )
+  );
 }
