@@ -53,7 +53,7 @@ describe('Gifts Section', () => {
     expect(screen.getByRole('button', { name: /copiar alias/i })).toBeInTheDocument()
   })
 
-  it('hides alias and shows confirmation when Efectivo is clicked', async () => {
+  it('hides alias and shows warm confirmation when Efectivo is clicked', async () => {
     render(<Gifts groupCode="casa" />)
 
     const cashButton = screen.getByRole('button', { name: /efectivo/i })
@@ -64,10 +64,10 @@ describe('Gifts Section', () => {
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'efectivo')
     expect(screen.queryByText('caro.herrera.15')).not.toBeInTheDocument()
-    expect(screen.getByText(/preferencia registrada/i)).toBeInTheDocument()
+    expect(screen.getByText(/muchas gracias por tu cariño/i)).toBeInTheDocument()
   })
 
-  it('hides alias and shows confirmation when Regalo físico is clicked', async () => {
+  it('hides alias and shows warm confirmation when Regalo físico is clicked', async () => {
     render(<Gifts groupCode="casa" />)
 
     const physicalButton = screen.getByRole('button', { name: /regalo físico/i })
@@ -78,7 +78,7 @@ describe('Gifts Section', () => {
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'fisico')
     expect(screen.queryByText('caro.herrera.15')).not.toBeInTheDocument()
-    expect(screen.getByText(/preferencia registrada/i)).toBeInTheDocument()
+    expect(screen.getByText(/muchas gracias por tu cariño/i)).toBeInTheDocument()
   })
 
   it('restores selection from sessionStorage if present', () => {
@@ -127,6 +127,28 @@ describe('Gifts Section', () => {
 
     expect(screen.getByRole('button', { name: /copiar alias/i })).toBeInTheDocument()
     expect(screen.queryByText(/¡copiado!/i)).not.toBeInTheDocument()
+  })
+
+  it('copies alias to clipboard when clicking directly on the alias text button', async () => {
+    render(<Gifts groupCode="casa" />)
+
+    const mpButton = screen.getByRole('button', { name: /transferencia/i })
+    await act(async () => {
+      fireEvent.click(mpButton)
+      vi.advanceTimersByTime(350)
+    })
+
+    const aliasTouchable = screen.getByRole('button', { name: /alias: caro\.herrera\.15/i })
+    await act(async () => {
+      fireEvent.click(aliasTouchable)
+    })
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('caro.herrera.15')
+    expect(screen.getByText(/¡copiado!/i)).toBeInTheDocument()
+
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
   })
 
   it('does not submit duplicate network request when clicking the already selected option', async () => {

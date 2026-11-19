@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Sparkles, HeartHandshake, Gift, Heart } from "lucide-react";
 import FadeContent from "./FadeContent";
 import ClickSpark from "./ClickSpark";
 import { submitGiftPreference } from "../api";
@@ -14,12 +14,15 @@ export interface GiftsProps {
 interface GiftOption {
   id: GiftPreferenceType;
   label: string;
+  icon: typeof Sparkles;
 }
 
+const CELESTIAL_SPARK_COLORS: string[] = ["#f8fafc", "#e2e8f0", "#93c5fd", "#3b82f6"];
+
 const GIFT_OPTIONS: GiftOption[] = [
-  { id: "transferencia", label: "✦ Transferencia MP" },
-  { id: "efectivo", label: "✉️ Efectivo en fiesta" },
-  { id: "fisico", label: "🎁 Regalo físico" },
+  { id: "transferencia", label: "Transferencia MP", icon: Sparkles },
+  { id: "efectivo", label: "Efectivo en fiesta", icon: HeartHandshake },
+  { id: "fisico", label: "Regalo físico", icon: Gift },
 ];
 
 export default function Gifts({
@@ -27,6 +30,7 @@ export default function Gifts({
   groupCode,
 }: GiftsProps) {
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -93,6 +97,7 @@ export default function Gifts({
 
   const handleCopy = async () => {
     let success = false;
+    setCopyFailed(false);
 
     // Modern asynchronous clipboard API
     try {
@@ -128,6 +133,10 @@ export default function Gifts({
       setCopied(true);
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
       copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+    } else {
+      setCopyFailed(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopyFailed(false), 3000);
     }
   };
 
@@ -155,8 +164,8 @@ export default function Gifts({
           <h2 className={styles.title}>Regalos</h2>
 
           <p className={styles.description}>
-            Tu presencia es el regalo más importante para mí. Si deseás hacerme
-            un presente, podés elegir la modalidad que prefieras:
+            Tu presencia es mi mayor alegría y el mejor regalo para esta noche mágica.
+            Si deseás hacerme un presente para acompañar mis sueños en esta nueva etapa, podés elegir la opción que prefieras:
           </p>
 
           {/* 3-Pill Interactive Celestial Selector */}
@@ -167,15 +176,16 @@ export default function Gifts({
           >
             {GIFT_OPTIONS.map((opt) => {
               const isSelected = selectedGift === opt.id;
+              const OptionIcon = opt.icon;
               return (
                 <ClickSpark
                   key={opt.id}
-                  sparkColor={["#f8fafc", "#e2e8f0", "#93c5fd", "#3b82f6"]}
+                  sparkColor={CELESTIAL_SPARK_COLORS}
                   shape="star"
                   sparkSize={12}
                   sparkCount={6}
                   sparkRadius={28}
-                  style={{ display: "inline-flex" }}
+                  className={styles.sparkInline}
                 >
                   <button
                     type="button"
@@ -185,7 +195,14 @@ export default function Gifts({
                       isSelected ? styles.pillActive : ""
                     }`}
                   >
-                    <span className={styles.pillText}>{opt.label}</span>
+                    <span className={styles.pillContent}>
+                      <OptionIcon
+                        size={15}
+                        className={styles.pillIcon}
+                        aria-hidden="true"
+                      />
+                      <span className={styles.pillText}>{opt.label}</span>
+                    </span>
                   </button>
                 </ClickSpark>
               );
@@ -195,7 +212,7 @@ export default function Gifts({
           {/* Initial state: Guidance note */}
           {!selectedGift && (
             <p className={styles.guidanceNote}>
-              Seleccioná una opción para conocer los detalles.
+              Seleccioná una opción para conocer los datos de transferencia o recepción.
             </p>
           )}
 
@@ -205,7 +222,16 @@ export default function Gifts({
               <div className={styles.aliasBlock}>
                 <span className={styles.aliasLabel}>Alias Mercado Pago</span>
 
-                <span className={styles.aliasValue}>{alias}</span>
+                {/* Direct touchable alias for instant mobile copying */}
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className={styles.aliasValueButton}
+                  title="Tocar para copiar alias"
+                  aria-label={`Alias: ${alias}. Tocar para copiar al portapapeles`}
+                >
+                  <span className={styles.aliasValue}>{alias}</span>
+                </button>
 
                 <div className={styles.reassurance}>
                   <span>Titular: Carolina Herrera</span>
@@ -217,21 +243,17 @@ export default function Gifts({
 
                 <div className={styles.sparkWrapper}>
                   <ClickSpark
-                    sparkColor={["#f8fafc", "#e2e8f0", "#93c5fd", "#3b82f6"]}
+                    sparkColor={CELESTIAL_SPARK_COLORS}
                     shape="star"
                     sparkSize={14}
                     sparkCount={8}
                     sparkRadius={35}
-                    style={{
-                      display: "inline-flex",
-                      width: "auto",
-                      height: "auto",
-                    }}
+                    className={styles.sparkInline}
                   >
                     <button
                       type="button"
                       onClick={handleCopy}
-                      aria-label={copied ? "¡Copiado!" : "Copiar alias"}
+                      aria-label={copied ? "¡Alias copiado!" : "Copiar alias"}
                       className={`${styles.copyButton} ${
                         copied ? styles.copyButtonCopied : ""
                       }`}
@@ -258,43 +280,54 @@ export default function Gifts({
                     </button>
                   </ClickSpark>
                 </div>
+
+                {copyFailed && (
+                  <p className={styles.copyFallbackHint} role="alert">
+                    No pudimos copiar automáticamente. Mantené presionado el alias arriba para seleccionarlo.
+                  </p>
+                )}
               </div>
 
               <p className={styles.instructions}>
-                Podés transferir desde cualquier app bancaria o billetera virtual
-                pegando este alias.
+                Podés transferir desde cualquier banco o billetera virtual (Mercado Pago, Cuenta DNI, BNA, Santander, etc.) pegando este alias.
               </p>
             </div>
           )}
 
-          {/* Options: Efectivo o Regalo Físico (Confirmation message) */}
+          {/* Options: Efectivo o Regalo Físico (Warm personalized message) */}
           {(selectedGift === "efectivo" || selectedGift === "fisico") && (
             <div className={styles.revealWrapper}>
               <div className={styles.confirmationNote} role="status">
-                <span className={styles.confirmationIcon} aria-hidden="true">
-                  ✓
-                </span>
+                <Heart
+                  size={18}
+                  className={styles.confirmationIcon}
+                  aria-hidden="true"
+                />
                 <span className={styles.confirmationText}>
-                  Preferencia registrada. ¡Muchas gracias!
+                  ¡Muchas gracias por tu cariño!
                 </span>
               </div>
 
               {selectedGift === "efectivo" ? (
                 <p className={styles.instructions}>
-                  Habrá un buzón especial en la recepción del salón para sobres y
-                  buenos deseos.
+                  Habrá un espacio especial en la recepción del salón para recibir tus
+                  presentes, dedicatorias y buenos deseos.
                 </p>
               ) : (
                 <p className={styles.instructions}>
-                  Habrá un espacio reservado en la recepción del salón para
-                  recibir presentes y obsequios.
+                  Habrá un rincón reservado en la recepción del salón para recibir
+                  presentes y obsequios con mucho amor.
                 </p>
               )}
             </div>
           )}
 
           <span className="sr-only" aria-live="polite">
-            {copied ? `Alias ${alias} copiado al portapapeles` : ""}
+            {copied
+              ? `Alias ${alias} copiado al portapapeles`
+              : copyFailed
+              ? `No se pudo copiar automáticamente el alias ${alias}`
+              : ""}
           </span>
         </div>
       </FadeContent>
