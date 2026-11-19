@@ -11,3 +11,6 @@ export interface RSVPData {
   cantidad: number
   acompanantes: string
 }
+
+export type GiftPreferenceType = 'transferencia' | 'efectivo' | 'fisico'
+

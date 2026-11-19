@@ -1,4 +1,4 @@
-import type { GroupValidation, RSVPData } from './types'
+import type { GroupValidation, RSVPData, GiftPreferenceType } from './types'
 
 export const getApiUrl = (): string => {
   return import.meta.env.VITE_APPS_SCRIPT_URL || ''
@@ -83,3 +83,30 @@ export async function submitRSVP(
     }
   }
 }
+
+export async function submitGiftPreference(
+  groupCode: string,
+  tipo: GiftPreferenceType,
+  baseUrl: string = getApiUrl()
+): Promise<{ success: boolean; error?: string }> {
+  if (!groupCode || !groupCode.trim()) {
+    return { success: false, error: 'Código de grupo requerido' }
+  }
+  try {
+    const url = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '')
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'gift_preference',
+        grupo_code: groupCode.trim(),
+        tipo_regalo: tipo,
+      }),
+    })
+    if (!res.ok) return { success: false, error: `HTTP ${res.status}` }
+    return await res.json()
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Error desconocido' }
+  }
+}
+

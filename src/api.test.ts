@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { validateGroup, submitRSVP } from './api'
+import { validateGroup, submitRSVP, submitGiftPreference } from './api'
 import type { RSVPData } from './types'
 
 describe('RSVP API Layer', () => {
@@ -110,6 +110,45 @@ describe('RSVP API Layer', () => {
       const res = await submitRSVP(sampleRSVP, 'https://script.google.com/macros/s/test/exec')
       expect(res.success).toBe(false)
       expect(res.error).toMatch(/error de conexión/i)
+    })
+  })
+
+  describe('submitGiftPreference', () => {
+    it('submits gift preference successfully to backend', async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ success: true }),
+      } as Response)
+
+      const res = await submitGiftPreference('casa', 'transferencia')
+      expect(res.success).toBe(true)
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'gift_preference',
+            grupo_code: 'casa',
+            tipo_regalo: 'transferencia',
+          }),
+        })
+      )
+    })
+
+    it('handles network error in submitGiftPreference gracefully', async () => {
+      globalThis.fetch = vi.fn().mockRejectedValue(new Error('Network offline'))
+      const res = await submitGiftPreference('casa', 'efectivo')
+      expect(res.success).toBe(false)
+      expect(res.error).toBeDefined()
+    })
+
+    it('returns error when group code is empty without fetching', async () => {
+      const fetchMock = vi.fn()
+      globalThis.fetch = fetchMock
+      const res = await submitGiftPreference('   ', 'fisico')
+      expect(res.success).toBe(false)
+      expect(res.error).toBe('Código de grupo requerido')
+      expect(fetchMock).not.toHaveBeenCalled()
     })
   })
 })
