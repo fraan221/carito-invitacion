@@ -76,15 +76,21 @@ function doPost(e) {
     }
 
     if (data.action === 'gift_preference') {
+      const allowedGiftTypes = ['transferencia', 'efectivo', 'fisico'];
+      const tipoRegalo = String(data.tipo_regalo || '').trim().toLowerCase();
+      if (!allowedGiftTypes.includes(tipoRegalo)) {
+        return jsonResponse({ success: false, error: 'Tipo de regalo inválido' });
+      }
+
       const sheetGifts = getSheet(SHEET_GIFT_PREFERENCES);
       if (!sheetGifts) {
         return jsonResponse({ success: false, error: 'Hoja Preferencias Regalos no encontrada' });
       }
       sheetGifts.appendRow([
         new Date(),
-        group.code,
+        String(group.code).trim().toLowerCase(),
         group.nombre,
-        String(data.tipo_regalo || '').trim(),
+        tipoRegalo,
       ]);
       return jsonResponse({ success: true });
     }

@@ -45,6 +45,7 @@ describe('Gifts Section', () => {
     const mpButton = screen.getByRole('button', { name: /transferencia/i })
     await act(async () => {
       fireEvent.click(mpButton)
+      vi.advanceTimersByTime(350)
     })
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'transferencia')
@@ -58,6 +59,7 @@ describe('Gifts Section', () => {
     const cashButton = screen.getByRole('button', { name: /efectivo/i })
     await act(async () => {
       fireEvent.click(cashButton)
+      vi.advanceTimersByTime(350)
     })
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'efectivo')
@@ -71,6 +73,7 @@ describe('Gifts Section', () => {
     const physicalButton = screen.getByRole('button', { name: /regalo físico/i })
     await act(async () => {
       fireEvent.click(physicalButton)
+      vi.advanceTimersByTime(350)
     })
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'fisico')
@@ -92,6 +95,7 @@ describe('Gifts Section', () => {
     const mpButton = screen.getByRole('button', { name: /transferencia/i })
     await act(async () => {
       fireEvent.click(mpButton)
+      vi.advanceTimersByTime(350)
     })
 
     expect(submitGiftPreference).not.toHaveBeenCalled()
@@ -105,6 +109,7 @@ describe('Gifts Section', () => {
     const mpButton = screen.getByRole('button', { name: /transferencia/i })
     await act(async () => {
       fireEvent.click(mpButton)
+      vi.advanceTimersByTime(350)
     })
 
     const copyBtn = screen.getByRole('button', { name: /copiar alias/i })
@@ -122,5 +127,43 @@ describe('Gifts Section', () => {
 
     expect(screen.getByRole('button', { name: /copiar alias/i })).toBeInTheDocument()
     expect(screen.queryByText(/¡copiado!/i)).not.toBeInTheDocument()
+  })
+
+  it('does not submit duplicate network request when clicking the already selected option', async () => {
+    render(<Gifts groupCode="casa" />)
+
+    const mpButton = screen.getByRole('button', { name: /transferencia/i })
+    await act(async () => {
+      fireEvent.click(mpButton)
+      vi.advanceTimersByTime(350)
+    })
+
+    expect(submitGiftPreference).toHaveBeenCalledTimes(1)
+
+    // Click it again
+    await act(async () => {
+      fireEvent.click(mpButton)
+      vi.advanceTimersByTime(350)
+    })
+
+    // Still called only once
+    expect(submitGiftPreference).toHaveBeenCalledTimes(1)
+  })
+
+  it('debounces rapid clicks between options and submits only the final choice', async () => {
+    render(<Gifts groupCode="casa" />)
+
+    const mpButton = screen.getByRole('button', { name: /transferencia/i })
+    const cashButton = screen.getByRole('button', { name: /efectivo/i })
+
+    await act(async () => {
+      fireEvent.click(mpButton)
+      // Rapid toggle before debounce window expires
+      fireEvent.click(cashButton)
+      vi.advanceTimersByTime(350)
+    })
+
+    expect(submitGiftPreference).toHaveBeenCalledTimes(1)
+    expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'efectivo')
   })
 })

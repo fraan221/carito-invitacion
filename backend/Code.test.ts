@@ -231,5 +231,39 @@ describe('Google Apps Script Backend (Code.gs)', () => {
       expect(body.error).toContain('Código de invitación no encontrado')
       expect(mockGiftPreferencesAppended.length).toBe(0)
     })
+
+    it('rejects gift_preference if tipo_regalo is invalid or empty', () => {
+      const payload = {
+        action: 'gift_preference',
+        grupo_code: 'casa',
+        tipo_regalo: 'oro_en_lingotes',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(false)
+      expect(body.error).toContain('Tipo de regalo inválido')
+      expect(mockGiftPreferencesAppended.length).toBe(0)
+    })
+
+    it('normalizes group code with trim and lowercase when appending to sheet', () => {
+      // Set guest code with uppercase and untrimmed spaces
+      mockGuestValues.push(['  FAMILIA-TEST  ', 'Familia Test', 2, '', '', '', ''])
+
+      const payload = {
+        action: 'gift_preference',
+        grupo_code: 'familia-test',
+        tipo_regalo: 'transferencia',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(true)
+      expect(mockGiftPreferencesAppended.length).toBe(1)
+      const appended = mockGiftPreferencesAppended[0]
+      expect(appended[1]).toBe('familia-test')
+    })
   })
 })

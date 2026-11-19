@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Copy, Check } from "lucide-react";
 import FadeContent from "./FadeContent";
 import ClickSpark from "./ClickSpark";
@@ -27,13 +27,16 @@ export default function Gifts({
   groupCode,
 }: GiftsProps) {
   const [copied, setCopied] = useState(false);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const effectiveGroupCode =
+  const rawCode =
     groupCode !== undefined && groupCode !== null && groupCode !== ""
       ? groupCode
       : typeof window !== "undefined"
       ? new URLSearchParams(window.location.search).get("g") ?? ""
       : "";
+  const effectiveGroupCode = rawCode.trim().toLowerCase();
 
   const storageKey = effectiveGroupCode
     ? `carito_gift_pref_${effectiveGroupCode}`
@@ -58,7 +61,16 @@ export default function Gifts({
     }
   );
 
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
+
   const handleSelectOption = (option: GiftPreferenceType) => {
+    if (option === selectedGift) return;
+
     setSelectedGift(option);
     try {
       sessionStorage.setItem(storageKey, option);
@@ -66,10 +78,16 @@ export default function Gifts({
       // Silently ignore storage access errors
     }
 
-    if (effectiveGroupCode.trim()) {
-      submitGiftPreference(effectiveGroupCode, option).catch(() => {
-        // Silently swallow network errors so UI remains uninterrupted
-      });
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    if (effectiveGroupCode) {
+      debounceTimerRef.current = setTimeout(() => {
+        submitGiftPreference(effectiveGroupCode, option).catch(() => {
+          // Silently swallow network errors so UI remains uninterrupted
+        });
+      }, 300);
     }
   };
 
@@ -108,7 +126,8 @@ export default function Gifts({
 
     if (success) {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
     }
   };
 
