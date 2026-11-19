@@ -5,6 +5,7 @@
 
 const SHEET_GUESTS = 'Lista de invitados';
 const SHEET_RESPONSES = 'Respuestas';
+const SHEET_GIFT_PREFERENCES = 'Preferencias Regalos';
 
 function getSheet(name) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -74,6 +75,20 @@ function doPost(e) {
       return jsonResponse({ success: false, error: 'Código de invitación no encontrado' });
     }
 
+    if (data.action === 'gift_preference') {
+      const sheetGifts = getSheet(SHEET_GIFT_PREFERENCES);
+      if (!sheetGifts) {
+        return jsonResponse({ success: false, error: 'Hoja Preferencias Regalos no encontrada' });
+      }
+      sheetGifts.appendRow([
+        new Date(),
+        group.code,
+        group.nombre,
+        String(data.tipo_regalo || '').trim(),
+      ]);
+      return jsonResponse({ success: true });
+    }
+
     const asiste = Boolean(data.asiste);
     const cantidad = asiste ? Number(data.cantidad || 0) : 0;
 
@@ -106,5 +121,5 @@ function doPost(e) {
 
 // Export para testing en entorno Node/Vitest
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { doGet, doPost, findGuestGroup, jsonResponse, SHEET_GUESTS, SHEET_RESPONSES };
+  module.exports = { doGet, doPost, findGuestGroup, jsonResponse, SHEET_GUESTS, SHEET_RESPONSES, SHEET_GIFT_PREFERENCES };
 }

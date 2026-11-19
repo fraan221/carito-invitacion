@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 let mockGuestValues: any[][] = []
 let mockResponsesAppended: any[][] = []
+let mockGiftPreferencesAppended: any[][] = []
 
 const mockGuestSheet = {
   getDataRange: () => ({
@@ -15,10 +16,17 @@ const mockResponsesSheet = {
   },
 }
 
+const mockGiftSheet = {
+  appendRow: (row: any[]) => {
+    mockGiftPreferencesAppended.push(row)
+  },
+}
+
 const mockSpreadsheet = {
   getSheetByName: (name: string) => {
     if (name === 'Lista de invitados') return mockGuestSheet
     if (name === 'Respuestas') return mockResponsesSheet
+    if (name === 'Preferencias Regalos') return mockGiftSheet
     return null
   },
 }
@@ -59,6 +67,7 @@ describe('Google Apps Script Backend (Code.gs)', () => {
       ['acuno-kler', 'Acuño / Kler', 5, '', '', '', ''],
     ]
     mockResponsesAppended = []
+    mockGiftPreferencesAppended = []
     vi.clearAllMocks()
   })
 
@@ -183,6 +192,44 @@ describe('Google Apps Script Backend (Code.gs)', () => {
 
       expect(body.success).toBe(false)
       expect(body.error).toBe('Payload vacío')
+    })
+  })
+
+  describe('doPost (Preferencias de Regalos)', () => {
+    it('handles gift_preference action by appending to Preferencias Regalos sheet', () => {
+      const payload = {
+        action: 'gift_preference',
+        grupo_code: 'casa',
+        tipo_regalo: 'transferencia',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(true)
+      expect(mockGiftPreferencesAppended.length).toBe(1)
+      const appended = mockGiftPreferencesAppended[0]
+      expect(appended[0]).toBeInstanceOf(Date)
+      expect(appended[1]).toBe('casa')
+      expect(appended[2]).toBe('Casa')
+      expect(appended[3]).toBe('transferencia')
+      expect(waitLockMock).toHaveBeenCalled()
+      expect(releaseLockMock).toHaveBeenCalled()
+    })
+
+    it('rejects gift_preference if group code is not found', () => {
+      const payload = {
+        action: 'gift_preference',
+        grupo_code: 'inexistente',
+        tipo_regalo: 'efectivo',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(false)
+      expect(body.error).toContain('Código de invitación no encontrado')
+      expect(mockGiftPreferencesAppended.length).toBe(0)
     })
   })
 })

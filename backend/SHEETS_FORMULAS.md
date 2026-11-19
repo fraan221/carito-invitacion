@@ -31,6 +31,8 @@ El sistema utiliza dos hojas principales y un panel de control KPI:
 | **E** | `personas_confirmadas` | Fórmula | Cantidad de personas confirmadas en la última respuesta (0 si no asiste o pendiente). |
 | **F** | `ultima_actualizacion` | Fórmula | Timestamp del último envío registrado. |
 | **G** | `link_invitacion` | Fórmula | URL única generada con parámetro `?g=`. |
+| **H** | `link_whatsapp` | Fórmula | Enlace directo para enviar la invitación por WhatsApp. |
+| **I** | `tipo_regalo` | Fórmula | Última modalidad de regalo elegida (`transferencia`, `efectivo`, `fisico` o `-`). |
 
 ---
 
@@ -107,6 +109,22 @@ Genera el enlace personalizado a la invitación web. Reemplazar `https://carolin
 
 ---
 
+#### Columna I: `tipo_regalo`
+
+Obtiene la última preferencia de regalo elegida por el grupo desde la pestaña `Preferencias Regalos`.
+
+- **Configuración en Español (separador `;`):**
+  ```excel
+  =SI.ERROR(BUSCARX(A2; 'Preferencias Regalos'!B:B; 'Preferencias Regalos'!D:D; "-"; 0; -1); "-")
+  ```
+
+- **Configuración en Inglés (separador `,`):**
+  ```excel
+  =IFERROR(XLOOKUP(A2, 'Preferencias Regalos'!B:B, 'Preferencias Regalos'!D:D, "-", 0, -1), "-")
+  ```
+
+---
+
 ## 3. Pestaña: `Respuestas`
 
 Se completa automáticamente desde Google Apps Script. No requiere fórmulas manuales.
@@ -124,7 +142,22 @@ Se completa automáticamente desde Google Apps Script. No requiere fórmulas man
 
 ---
 
-## 4. Pestaña / Panel: `Dashboard`
+## 4. Pestaña: `Preferencias Regalos`
+
+Se completa automáticamente desde Google Apps Script cada vez que un invitado selecciona una modalidad de regalo en la sección de regalos. Registro inmutable de eventos.
+
+### Estructura de columnas
+
+| Columna | Encabezado | Descripción |
+|---|---|---|
+| **A** | `timestamp` | Fecha y hora registrada por el script (`new Date()`). |
+| **B** | `grupo_code` | Código slug del grupo. |
+| **C** | `nombre_grupo` | Nombre del grupo familiar en la lista de invitados. |
+| **D** | `tipo_regalo` | Modalidad seleccionada (`transferencia`, `efectivo`, `fisico`). |
+
+---
+
+## 5. Pestaña / Panel: `Dashboard`
 
 Resumen ejecutivo para la familia y proveedores del salón:
 
