@@ -72,6 +72,18 @@ describe('RSVP Component', () => {
 
     const options = Array.from(quantitySelect.querySelectorAll('option')).map((o) => o.value)
     expect(options).toEqual(['1', '2', '3', '4'])
+    expect(screen.getByText(/15 de Enero de 2027/i)).toBeInTheDocument()
+  })
+
+  it('renders custom rsvpDeadline in prompt when prop provided', async () => {
+    window.location.search = '?g=familia-perez'
+    vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 4 })
+
+    render(<RSVP rsvpDeadline="28 de Enero de 2027" />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/28 de Enero de 2027/i)).toBeInTheDocument()
+    })
   })
 
   it('hides companions field when cantidad = 1, shows it when cantidad > 1', async () => {

@@ -21,7 +21,7 @@
 }
 
 .container {
-  max-width: 520px;
+  max-width: 620px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;

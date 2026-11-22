@@ -30,11 +30,17 @@ describe('slugify', () => {
 });
 
 describe('createWhatsAppLink', () => {
-  it('generates a valid wa.me deep link with encoded invitation url', () => {
+  it('generates a valid wa.me deep link with encoded invitation url and deadline', () => {
     const link = createWhatsAppLink('casa', 'https://milagroscarolinaherrera.app');
     expect(link).toContain('https://wa.me/?text=');
     expect(link).toContain(encodeURIComponent('https://milagroscarolinaherrera.app/?g=casa'));
     expect(link).toContain(encodeURIComponent('¡Hola! Te invitamos a los XV de Caro 🌟'));
+    expect(link).toContain(encodeURIComponent('15 de Enero de 2027'));
+  });
+
+  it('allows customizing deadline parameter', () => {
+    const link = createWhatsAppLink('casa', 'https://milagroscarolinaherrera.app', '25 de Enero de 2027');
+    expect(link).toContain(encodeURIComponent('25 de Enero de 2027'));
   });
 });
 

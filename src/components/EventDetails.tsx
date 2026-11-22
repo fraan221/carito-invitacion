@@ -4,6 +4,7 @@ import {
   Clock,
   ExternalLink,
   CalendarPlus,
+  CalendarCheck,
   Copy,
   Check,
   Download,
@@ -18,6 +19,7 @@ export interface EventDetailsProps {
   address?: string;
   date?: string;
   time?: string;
+  rsvpDeadline?: string;
   mapsUrl?: string;
   googleCalendarUrl?: string;
 }
@@ -27,6 +29,7 @@ const DEFAULT_ADDRESS =
   "Cno. Gral. Belgrano 5599, B1888 Florencio Varela, Provincia de Buenos Aires";
 const DEFAULT_DATE = "Sábado 6 de Febrero de 2027";
 const DEFAULT_TIME = "21:00 a 05:00 hs";
+const DEFAULT_RSVP_DEADLINE = "15 de Enero de 2027";
 const DEFAULT_MAPS_URL =
   "https://maps.google.com/?q=Salon+Royal+Night+Cno+Gral+Belgrano+5599+Florencio+Varela";
 const DEFAULT_GCAL_URL =
@@ -50,6 +53,7 @@ export default function EventDetails({
   address = DEFAULT_ADDRESS,
   date = DEFAULT_DATE,
   time = DEFAULT_TIME,
+  rsvpDeadline = DEFAULT_RSVP_DEADLINE,
   mapsUrl = DEFAULT_MAPS_URL,
   googleCalendarUrl = DEFAULT_GCAL_URL,
 }: EventDetailsProps) {
@@ -58,6 +62,7 @@ export default function EventDetails({
   const cleanAddress = address?.trim() || DEFAULT_ADDRESS;
   const cleanDate = date?.trim() || DEFAULT_DATE;
   const cleanTime = time?.trim() || DEFAULT_TIME;
+  const cleanRsvpDeadline = rsvpDeadline?.trim() || DEFAULT_RSVP_DEADLINE;
 
   // Safe external URLs with automatic query fallback if blank
   const safeMapsUrl = useMemo(() => {
@@ -76,9 +81,9 @@ export default function EventDetails({
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
       "Mis 15 — Milagros Carolina Herrera",
     )}&dates=20270207T000000Z/20270207T080000Z&details=${encodeURIComponent(
-      `Celebración de Mis 15 Años - Milagros Carolina Herrera. ${cleanVenue}.`,
+      `Celebración de Mis 15 Años - Milagros Carolina Herrera. Confirmar asistencia hasta el ${cleanRsvpDeadline}. ${cleanVenue}.`,
     )}&location=${encodeURIComponent(`${cleanVenue}, ${cleanAddress}`)}`;
-  }, [googleCalendarUrl, cleanVenue, cleanAddress]);
+  }, [googleCalendarUrl, cleanVenue, cleanAddress, cleanRsvpDeadline]);
 
   // RFC 5545 compliant iCalendar (.ics) generation for Apple Calendar & Outlook
   const icsDataUri = useMemo(() => {
@@ -94,7 +99,7 @@ export default function EventDetails({
       "DTSTART:20270207T000000Z",
       "DTEND:20270207T080000Z",
       `SUMMARY:${`Mis 15 — Milagros Carolina Herrera (${cleanVenue})`}`,
-      `DESCRIPTION:${cleanDate} · ${cleanTime}\\nCelebración de Mis 15 Años - Milagros Carolina Herrera.\\nLugar: ${cleanVenue}\\nDirección: ${cleanAddress}`,
+      `DESCRIPTION:${cleanDate} · ${cleanTime}\\nConfirmar asistencia antes del: ${cleanRsvpDeadline}\\nCelebración de Mis 15 Años - Milagros Carolina Herrera.\\nLugar: ${cleanVenue}\\nDirección: ${cleanAddress}`,
       `LOCATION:${cleanVenue}, ${cleanAddress}`,
       "STATUS:CONFIRMED",
       "END:VEVENT",
@@ -102,7 +107,7 @@ export default function EventDetails({
     ].join("\r\n");
 
     return `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
-  }, [cleanVenue, cleanAddress, cleanDate, cleanTime]);
+  }, [cleanVenue, cleanAddress, cleanDate, cleanTime, cleanRsvpDeadline]);
 
   // Resilient clipboard copy with execCommand fallback for legacy/in-app webviews
   const [copiedAddress, setCopiedAddress] = useState(false);
@@ -211,6 +216,20 @@ export default function EventDetails({
                   className={styles.timeIcon}
                 />
                 <span className={styles.dressCodeText}>Elegante</span>
+              </span>
+            </div>
+
+            <div className={styles.rsvpDeadlineBadge}>
+              <CalendarCheck
+                size={14}
+                aria-hidden="true"
+                className={styles.deadlineIcon}
+              />
+              <span>
+                Confirmar asistencia hasta el{" "}
+                <strong className={styles.deadlineHighlight}>
+                  {cleanRsvpDeadline}
+                </strong>
               </span>
             </div>
           </div>

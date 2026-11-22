@@ -13,9 +13,17 @@ import styles from "./RSVP.module.css";
 
 interface RSVPProps {
   groupCode?: string;
+  rsvpDeadline?: string;
 }
 
-export default function RSVP({ groupCode }: RSVPProps) {
+const DEFAULT_RSVP_DEADLINE = "15 de Enero de 2027";
+
+export default function RSVP({
+  groupCode,
+  rsvpDeadline = DEFAULT_RSVP_DEADLINE,
+}: RSVPProps) {
+  const cleanRsvpDeadline = rsvpDeadline?.trim() || DEFAULT_RSVP_DEADLINE;
+
   // Read ?g= from window.location.search if not passed as prop
   const initialCode = (
     groupCode ??
@@ -194,11 +202,10 @@ export default function RSVP({ groupCode }: RSVPProps) {
       className={styles.section}
     >
       <FadeContent
-        duration={1.2}
-        blur={10}
-        ease="sine.in"
-        staggerFrom="center"
-        disappearEase="expo.in"
+        duration={0.8}
+        blur={false}
+        trigger="mount"
+        ease="power2.out"
       >
         <div className={styles.editorialFlow}>
           {/* Celestial herald header */}
@@ -322,7 +329,11 @@ export default function RSVP({ groupCode }: RSVPProps) {
                 <form onSubmit={handleSubmit} className={styles.form}>
                   <p className={styles.formPrompt}>
                     Por favor confirmá si vas a poder acompañarme en mis 15
-                    años.
+                    años antes del{" "}
+                    <strong className={styles.deadlineHighlight}>
+                      {cleanRsvpDeadline}
+                    </strong>
+                    .
                   </p>
 
                   {errorMessage && (

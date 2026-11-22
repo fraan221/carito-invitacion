@@ -140,6 +140,33 @@
   letter-spacing: 0.02em;
 }
 
+/* RSVP Confirmation Deadline Herald */
+.rsvpDeadlineBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-silver-light);
+  background: rgba(30, 58, 138, 0.25);
+  border: 1px solid var(--border-subtle);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  margin-block-start: 0.25rem;
+}
+
+.deadlineIcon {
+  color: var(--color-silver-light);
+  flex-shrink: 0;
+}
+
+.deadlineHighlight {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
 /* Constellation Divider */
 .constellationDivider {
   display: flex;

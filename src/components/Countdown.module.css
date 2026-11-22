@@ -1,5 +1,5 @@
 .section {
-  padding: clamp(3.5rem, 7vw, 5.5rem) 1.5rem;
+  padding: clamp(4rem, 9vw, 6.5rem) 1.5rem;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -8,7 +8,7 @@
 
 /* Atmospheric celestial aura floating behind the numbers */
 .alignmentWrapper {
-  max-width: 580px;
+  max-width: 620px;
   margin-inline: auto;
   position: relative;
   padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem);

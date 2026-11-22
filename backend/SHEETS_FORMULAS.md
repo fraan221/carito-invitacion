@@ -109,6 +109,22 @@ Genera el enlace personalizado a la invitación web. Reemplazar `https://milagro
 
 ---
 
+#### Columna H: `link_whatsapp`
+
+Genera el enlace directo para enviar la invitación por WhatsApp con el mensaje pre-armado y la fecha límite de confirmación. Reemplazar `15 de Enero de 2027` por la fecha acordada por la familia.
+
+- **Configuración en Español (separador `;`):**
+  ```excel
+  ="https://wa.me/?text=" & ENCODEURL("¡Hola! Te invitamos a los XV de Caro 🌟" & CARACTER(10) & "Confirmá tu asistencia antes del 15 de Enero de 2027 en:" & CARACTER(10) & G2)
+  ```
+
+- **Configuración en Inglés (separador `,`):**
+  ```excel
+  ="https://wa.me/?text=" & ENCODEURL("¡Hola! Te invitamos a los XV de Caro 🌟" & CHAR(10) & "Confirmá tu asistencia antes del 15 de Enero de 2027 en:" & CHAR(10) & G2)
+  ```
+
+---
+
 #### Columna I: `tipo_regalo`
 
 Obtiene la última preferencia de regalo elegida por el grupo desde la pestaña `Preferencias Regalos`.

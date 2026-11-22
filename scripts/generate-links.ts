@@ -15,6 +15,7 @@ export interface GuestGroup {
 }
 
 const DEFAULT_BASE_URL = 'https://milagroscarolinaherrera.app';
+export const DEFAULT_RSVP_DEADLINE = '15 de Enero de 2027';
 
 export function slugify(name: string): string {
   return name
@@ -25,13 +26,21 @@ export function slugify(name: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-export function createWhatsAppLink(slug: string, baseUrl = DEFAULT_BASE_URL): string {
+export function createWhatsAppLink(
+  slug: string,
+  baseUrl = DEFAULT_BASE_URL,
+  deadline = DEFAULT_RSVP_DEADLINE
+): string {
   const invitationUrl = `${baseUrl}/?g=${slug}`;
-  const text = `¡Hola! Te invitamos a los XV de Caro 🌟 ${invitationUrl}`;
+  const text = `¡Hola! Te invitamos a los XV de Caro 🌟\nConfirmá tu asistencia antes del ${deadline}:\n${invitationUrl}`;
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
 
-export function parseGuestCsv(csvContent: string, baseUrl = DEFAULT_BASE_URL): GuestGroup[] {
+export function parseGuestCsv(
+  csvContent: string,
+  baseUrl = DEFAULT_BASE_URL,
+  deadline = DEFAULT_RSVP_DEADLINE
+): GuestGroup[] {
   const lines = csvContent.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   if (lines.length <= 1) return [];
 
@@ -52,7 +61,7 @@ export function parseGuestCsv(csvContent: string, baseUrl = DEFAULT_BASE_URL): G
 
     const slug = slugify(nombre);
     const invitationUrl = `${baseUrl}/?g=${slug}`;
-    const whatsappUrl = createWhatsAppLink(slug, baseUrl);
+    const whatsappUrl = createWhatsAppLink(slug, baseUrl, deadline);
 
     results.push({
       numero,
@@ -72,10 +81,11 @@ export function parseGuestCsv(csvContent: string, baseUrl = DEFAULT_BASE_URL): G
 export function generateLinksFromCsv(
   inputPath: string,
   baseUrl = DEFAULT_BASE_URL,
-  outputPath?: string
+  outputPath?: string,
+  deadline = DEFAULT_RSVP_DEADLINE
 ): GuestGroup[] {
   const content = fs.readFileSync(inputPath, 'utf-8');
-  const guests = parseGuestCsv(content, baseUrl);
+  const guests = parseGuestCsv(content, baseUrl, deadline);
 
   if (outputPath) {
     const csvHeader = 'grupo_code,nombre_grupo,max_personas,link_invitacion,link_whatsapp,observaciones\n';

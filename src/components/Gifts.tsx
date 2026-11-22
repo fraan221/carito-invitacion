@@ -148,7 +148,7 @@ export default function Gifts({
       className={styles.section}
     >
       <FadeContent
-        duration={1.0}
+        duration={0.8}
         blur={false}
         trigger="mount"
         ease="power2.out"

@@ -53,10 +53,10 @@ export default function Closing() {
       <div className={styles.aura} aria-hidden="true" />
 
       <FadeContent
-        duration={1.2}
-        blur={10}
-        ease="sine.in"
-        staggerFrom="center"
+        duration={0.8}
+        blur={false}
+        trigger="mount"
+        ease="power2.out"
       >
         <div className={styles.container}>
           <div className={styles.herald} aria-hidden="true">
