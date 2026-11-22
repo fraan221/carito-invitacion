@@ -24,8 +24,8 @@ describe('EventDetails (Hardened Resilience & Edge Cases)', () => {
       expect(screen.getByText(/Sábado 6 de Febrero de 2027/i)).toBeInTheDocument();
       expect(screen.getByText(/21:00 a 05:00 hs/i)).toBeInTheDocument();
       expect(screen.getByText(/confirmar asistencia hasta el/i)).toBeInTheDocument();
-      expect(screen.getByText(/15 de Enero de 2027/i)).toBeInTheDocument();
-      expect(screen.getByText(/15\/01\/2027/i)).toBeInTheDocument();
+      expect(screen.getByText(/20 de Diciembre de 2026/i)).toBeInTheDocument();
+      expect(screen.getByText(/20\/12\/2026/i)).toBeInTheDocument();
     });
 
     it('renders custom rsvp deadline and short mobile deadline when passed as props', () => {

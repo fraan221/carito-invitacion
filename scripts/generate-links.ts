@@ -15,7 +15,7 @@ export interface GuestGroup {
 }
 
 const DEFAULT_BASE_URL = 'https://milagroscarolinaherrera.app';
-export const DEFAULT_RSVP_DEADLINE = '15 de Enero de 2027';
+export const DEFAULT_RSVP_DEADLINE = '20 de Diciembre de 2026';
 
 export function slugify(name: string): string {
   return name

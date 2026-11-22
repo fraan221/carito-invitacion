@@ -35,7 +35,7 @@ describe('createWhatsAppLink', () => {
     expect(link).toContain('https://wa.me/?text=');
     expect(link).toContain(encodeURIComponent('https://milagroscarolinaherrera.app/?g=casa'));
     expect(link).toContain(encodeURIComponent('¡Hola! Te invitamos a los XV de Caro 🌟'));
-    expect(link).toContain(encodeURIComponent('15 de Enero de 2027'));
+    expect(link).toContain(encodeURIComponent('20 de Diciembre de 2026'));
   });
 
   it('allows customizing deadline parameter', () => {

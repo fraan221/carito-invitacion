@@ -16,7 +16,7 @@ interface RSVPProps {
   rsvpDeadline?: string;
 }
 
-const DEFAULT_RSVP_DEADLINE = "15 de Enero de 2027";
+const DEFAULT_RSVP_DEADLINE = "20 de Diciembre de 2026";
 
 export default function RSVP({
   groupCode,

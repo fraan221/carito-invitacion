@@ -30,8 +30,8 @@ const DEFAULT_ADDRESS =
   "Cno. Gral. Belgrano 5599, B1888 Florencio Varela, Provincia de Buenos Aires";
 const DEFAULT_DATE = "Sábado 6 de Febrero de 2027";
 const DEFAULT_TIME = "21:00 a 05:00 hs";
-const DEFAULT_RSVP_DEADLINE = "15 de Enero de 2027";
-const DEFAULT_RSVP_DEADLINE_SHORT = "15/01/2027";
+const DEFAULT_RSVP_DEADLINE = "20 de Diciembre de 2026";
+const DEFAULT_RSVP_DEADLINE_SHORT = "20/12/2026";
 const DEFAULT_MAPS_URL =
   "https://maps.google.com/?q=Salon+Royal+Night+Cno+Gral+Belgrano+5599+Florencio+Varela";
 const DEFAULT_GCAL_URL =

@@ -72,7 +72,7 @@ describe('RSVP Component', () => {
 
     const options = Array.from(quantitySelect.querySelectorAll('option')).map((o) => o.value)
     expect(options).toEqual(['1', '2', '3', '4'])
-    expect(screen.getByText(/15 de Enero de 2027/i)).toBeInTheDocument()
+    expect(screen.getByText(/20 de Diciembre de 2026/i)).toBeInTheDocument()
   })
 
   it('renders custom rsvpDeadline in prompt when prop provided', async () => {
