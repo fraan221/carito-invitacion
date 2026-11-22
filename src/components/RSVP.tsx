@@ -80,7 +80,6 @@ export default function RSVP({ groupCode }: RSVPProps) {
     if (!initialCode) return;
 
     let isMounted = true;
-    setLoadingValidation(true);
 
     validateGroup(initialCode)
       .then((res) => {
