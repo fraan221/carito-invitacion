@@ -375,3 +375,119 @@
   color: var(--text-muted);
   margin: 0;
 }
+
+/* Manual Code Entry Flow */
+.manualEntrySection {
+  width: 100%;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.manualToggleBtn {
+  background: none;
+  border: none;
+  color: var(--color-silver);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  letter-spacing: 0.03em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s ease, opacity 0.2s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.manualToggleBtn:hover {
+  color: var(--color-silver-light);
+  opacity: 1;
+}
+
+.manualForm {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  text-align: left;
+}
+
+.manualLabel {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  color: var(--color-silver-light);
+}
+
+.manualInputRow {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .manualInputRow {
+    flex-direction: column;
+  }
+}
+
+.manualInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-silver);
+  border-radius: var(--radius-sm);
+  color: var(--color-silver-light);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.manualInput:focus {
+  outline: none;
+  border-color: var(--color-silver-light);
+  box-shadow: 0 0 12px var(--color-silver-glow);
+}
+
+.manualSubmitBtn {
+  padding: 0.75rem 1.25rem;
+  background: rgba(30, 58, 138, 0.4);
+  border: 1px solid var(--border-silver);
+  border-radius: var(--radius-sm);
+  color: var(--color-silver-light);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: all 0.2s ease;
+}
+
+.manualSubmitBtn:hover:not(:disabled) {
+  background: rgba(30, 58, 138, 0.7);
+  border-color: var(--color-silver-light);
+  box-shadow: 0 0 10px var(--color-silver-glow);
+}
+
+.manualSubmitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.manualErrorText {
+  color: #f87171;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  margin: 0.25rem 0 0;
+  text-align: center;
+}

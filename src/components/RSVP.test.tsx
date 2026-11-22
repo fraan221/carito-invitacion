@@ -181,4 +181,47 @@ describe('RSVP Component', () => {
       expect(screen.getByText(/excede capacidad autorizada/i)).toBeInTheDocument()
     })
   })
+
+  it('allows entering and validating a group code manually when missing from URL', async () => {
+    window.location.search = ''
+    vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 3 })
+
+    render(<RSVP />)
+
+    // Manual input toggle is present
+    const toggleBtn = screen.getByRole('button', { name: /ingresalo aquí|ingresar código/i })
+    expect(toggleBtn).toBeInTheDocument()
+    fireEvent.click(toggleBtn)
+
+    // Input and verify button appear
+    const codeInput = screen.getByLabelText(/código de invitación/i)
+    expect(codeInput).toBeInTheDocument()
+
+    fireEvent.change(codeInput, { target: { value: 'familia-diaz' } })
+    fireEvent.click(screen.getByRole('button', { name: /verificar pase|verificar código/i }))
+
+    await waitFor(() => {
+      expect(api.validateGroup).toHaveBeenCalledWith('familia-diaz')
+      expect(screen.getByLabelText(/tu nombre y apellido/i)).toBeInTheDocument()
+    })
+  })
+
+  it('shows error message when manually entered code is invalid', async () => {
+    window.location.search = ''
+    vi.mocked(api.validateGroup).mockResolvedValue({ valid: false, maxPersonas: 0 })
+
+    render(<RSVP />)
+
+    const toggleBtn = screen.getByRole('button', { name: /ingresalo aquí|ingresar código/i })
+    fireEvent.click(toggleBtn)
+
+    const codeInput = screen.getByLabelText(/código de invitación/i)
+    fireEvent.change(codeInput, { target: { value: 'codigo-erroneo' } })
+    fireEvent.click(screen.getByRole('button', { name: /verificar pase|verificar código/i }))
+
+    await waitFor(() => {
+      expect(screen.getByText(/código no encontrado/i)).toBeInTheDocument()
+    })
+    expect(screen.queryByLabelText(/tu nombre y apellido/i)).not.toBeInTheDocument()
+  })
 })

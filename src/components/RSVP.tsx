@@ -17,16 +17,23 @@ interface RSVPProps {
 
 export default function RSVP({ groupCode }: RSVPProps) {
   // Read ?g= from window.location.search if not passed as prop
-  const code = (
+  const initialCode = (
     groupCode ??
     (typeof window !== "undefined"
       ? (new URLSearchParams(window.location.search).get("g") ?? "")
       : "")
   ).trim();
 
-  const [loadingValidation, setLoadingValidation] = useState(Boolean(code));
+  const [code, setCode] = useState(initialCode);
+  const [loadingValidation, setLoadingValidation] = useState(Boolean(initialCode));
   const [isValidGroup, setIsValidGroup] = useState(false);
   const [maxPersonas, setMaxPersonas] = useState(1);
+
+  // Manual code entry states
+  const [isManualOpen, setIsManualOpen] = useState(false);
+  const [manualCode, setManualCode] = useState("");
+  const [validatingManual, setValidatingManual] = useState(false);
+  const [manualError, setManualError] = useState<string | null>(null);
 
   // Form states
   const [nombre, setNombre] = useState("");
@@ -70,14 +77,16 @@ export default function RSVP({ groupCode }: RSVPProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!code) return;
+    if (!initialCode) return;
 
     let isMounted = true;
+    setLoadingValidation(true);
 
-    validateGroup(code)
+    validateGroup(initialCode)
       .then((res) => {
         if (!isMounted) return;
         if (res.valid) {
+          setCode(initialCode);
           setIsValidGroup(true);
           setMaxPersonas(Math.max(1, res.maxPersonas));
           setCantidad(1);
@@ -95,7 +104,45 @@ export default function RSVP({ groupCode }: RSVPProps) {
     return () => {
       isMounted = false;
     };
-  }, [code]);
+  }, [initialCode]);
+
+  const handleManualValidate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const normalized = manualCode.trim();
+    if (!normalized) return;
+
+    setValidatingManual(true);
+    setManualError(null);
+
+    try {
+      const res = await validateGroup(normalized);
+      if (res.valid) {
+        setCode(normalized);
+        setIsValidGroup(true);
+        setMaxPersonas(Math.max(1, res.maxPersonas));
+        setCantidad(1);
+        if (typeof window !== "undefined") {
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.set("g", normalized);
+            window.history.replaceState({}, "", url.toString());
+          } catch {
+            // Ignore history error
+          }
+        }
+      } else {
+        setManualError(
+          "Código no encontrado. Por favor verificá que esté bien escrito.",
+        );
+      }
+    } catch {
+      setManualError(
+        "Ocurrió un error al verificar tu pase. Por favor intentá nuevamente.",
+      );
+    } finally {
+      setValidatingManual(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,6 +231,56 @@ export default function RSVP({ groupCode }: RSVPProps) {
                 WhatsApp, por favor abrí el enlace directo que te enviamos para
                 reservar tu lugar.
               </p>
+
+              <div className={styles.manualEntrySection}>
+                {!isManualOpen ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsManualOpen(true)}
+                    className={styles.manualToggleBtn}
+                  >
+                    ¿Tenés tu código de invitación? Ingresalo aquí
+                  </button>
+                ) : (
+                  <form
+                    onSubmit={handleManualValidate}
+                    className={styles.manualForm}
+                  >
+                    <label
+                      htmlFor="manual-code-input"
+                      className={styles.manualLabel}
+                    >
+                      Código de invitación
+                    </label>
+                    <div className={styles.manualInputRow}>
+                      <input
+                        id="manual-code-input"
+                        type="text"
+                        value={manualCode}
+                        onChange={(e) => {
+                          setManualCode(e.target.value);
+                          if (manualError) setManualError(null);
+                        }}
+                        placeholder="Ej: FAMILIA-PEREZ"
+                        className={styles.manualInput}
+                        autoFocus
+                      />
+                      <button
+                        type="submit"
+                        disabled={validatingManual || !manualCode.trim()}
+                        className={styles.manualSubmitBtn}
+                      >
+                        {validatingManual ? "Verificando..." : "Verificar pase"}
+                      </button>
+                    </div>
+                    {manualError && (
+                      <p className={styles.manualErrorText} role="alert">
+                        {manualError}
+                      </p>
+                    )}
+                  </form>
+                )}
+              </div>
             </div>
           )}
 
