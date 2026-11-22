@@ -101,11 +101,13 @@
   gap: clamp(0.6rem, 2.2vw, 0.85rem);
   width: 100%;
   max-width: 540px;
-  margin: 0 0 1.5rem 0;
+  margin: 0 auto 1.5rem auto;
 }
 
 .sparkInline {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: auto;
   height: auto;
 }
@@ -193,8 +195,9 @@
   font-size: 0.875rem;
   color: var(--text-muted);
   font-style: italic;
-  margin: 0.5rem 0 1.5rem 0;
+  margin: 0.5rem auto 1.5rem auto;
   opacity: 0.85;
+  text-align: center;
 }
 
 /* Reveal transition wrapper */
@@ -498,12 +501,26 @@
 
   .pillGroup {
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 100%;
+    margin: 0 auto 1.5rem auto;
+  }
+
+  .sparkInline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 280px;
+    margin-inline: auto;
   }
 
   .pill {
     width: 100%;
     max-width: 280px;
+    justify-content: center;
+    text-align: center;
   }
 
   .aliasBlock {
@@ -512,6 +529,14 @@
 
   .aliasValue {
     font-size: 1.35rem;
+  }
+
+  .sparkWrapper {
+    width: 100%;
+    max-width: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .copyButton {

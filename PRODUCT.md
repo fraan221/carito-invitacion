@@ -51,6 +51,7 @@ web (mobile-first)
 - Elementos identitarios:
   - Atmósfera de azul medianoche abisal con partículas estelares suspendidas y sutiles cáusticas de luz.
   - Tipografía editorial refinada con jerarquía contundente y monograma romano "XV".
+  - Monograma y Favicons: Monograma romano "XV" en plata líquida degradé (`#f8fafc` a `#e2e8f0`) sobre pastilla azul noche profundo (`#050814`), diseñado para máximo contraste y legibilidad tanto en pestañas claras como en modo oscuro. Set completo optimizado en `public/` (`favicon.svg`, `favicon-32.png`, `favicon-512.png`, `favicon.ico`, `apple-touch-icon.png`).
   - Acentos de plata líquida, reflejos diamantados y contrastes cuidados.
   - Composiciones editoriales asimétricas con amplio espacio negativo, evitando la monotonía de tarjetas idénticas.
 
@@ -62,6 +63,7 @@ web (mobile-first)
 - Alias bancario confirmado: `caro.herrera.15`.
 - Backend Apps Script funcional con tests unitarios (`backend/Code.test.ts`) y fórmulas documentadas (`backend/SHEETS_FORMULAS.md`).
 - Generador de enlaces nominales por lote probado (`scripts/generate-links.ts`).
+- Identidad visual de favicons completa y vinculada en `index.html`: SVG vectorial escalable con degradé en plata, PNGs 32x32 y 512x512, ICO multi-resolución y Apple Touch Icon 180x180.
 
 ## Product Principles
 

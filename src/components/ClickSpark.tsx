@@ -470,7 +470,7 @@ const ClickSpark = forwardRef<ClickSparkHandle, ClickSparkProps>(
       <div
         ref={rootRef}
         className={className}
-        style={{ position: 'relative', width: '100%', height: '100%', isolation: 'isolate', ...style }}
+        style={{ position: 'relative', isolation: 'isolate', ...style }}
       >
         {children}
         <span

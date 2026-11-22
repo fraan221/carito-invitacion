@@ -31,9 +31,9 @@ describe('slugify', () => {
 
 describe('createWhatsAppLink', () => {
   it('generates a valid wa.me deep link with encoded invitation url', () => {
-    const link = createWhatsAppLink('casa', 'https://carolina-xv.vercel.app');
+    const link = createWhatsAppLink('casa', 'https://milagroscarolinaherrera.app');
     expect(link).toContain('https://wa.me/?text=');
-    expect(link).toContain(encodeURIComponent('https://carolina-xv.vercel.app/?g=casa'));
+    expect(link).toContain(encodeURIComponent('https://milagroscarolinaherrera.app/?g=casa'));
     expect(link).toContain(encodeURIComponent('¡Hola! Te invitamos a los XV de Caro 🌟'));
   });
 });
@@ -46,7 +46,7 @@ describe('parseGuestCsv', () => {
 12,Izquierda,Fran P.,2,Pendiente,
 ,,TOTAL,89,,`;
 
-    const guests = parseGuestCsv(sampleCsv, 'https://carolina-xv.vercel.app');
+    const guests = parseGuestCsv(sampleCsv, 'https://milagroscarolinaherrera.app');
 
     expect(guests).toHaveLength(3);
     expect(guests[0]).toEqual({
@@ -55,8 +55,8 @@ describe('parseGuestCsv', () => {
       nombre: 'Casa',
       cantidad: 7,
       slug: 'casa',
-      invitationUrl: 'https://carolina-xv.vercel.app/?g=casa',
-      whatsappUrl: createWhatsAppLink('casa', 'https://carolina-xv.vercel.app'),
+      invitationUrl: 'https://milagroscarolinaherrera.app/?g=casa',
+      whatsappUrl: createWhatsAppLink('casa', 'https://milagroscarolinaherrera.app'),
       observaciones: '',
     });
     expect(guests[1].slug).toBe('acuno-kler');
@@ -77,7 +77,7 @@ describe('generateLinksFromCsv', () => {
       `N°,Columna en la hoja,Invitado / Grupo,Cantidad de personas,Estado,Observaciones\n1,Izquierda,Casa,7,Pendiente,\n,,TOTAL,89,,`
     );
 
-    const guests = generateLinksFromCsv(inputPath, 'https://carolina-xv.vercel.app', outputPath);
+    const guests = generateLinksFromCsv(inputPath, 'https://milagroscarolinaherrera.app', outputPath);
     expect(guests).toHaveLength(1);
     expect(guests[0].slug).toBe('casa');
 

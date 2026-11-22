@@ -14,7 +14,7 @@ export interface GuestGroup {
   observaciones: string;
 }
 
-const DEFAULT_BASE_URL = 'https://carolina-xv.vercel.app';
+const DEFAULT_BASE_URL = 'https://milagroscarolinaherrera.app';
 
 export function slugify(name: string): string {
   return name

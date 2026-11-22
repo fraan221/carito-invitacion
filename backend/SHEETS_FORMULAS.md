@@ -100,11 +100,11 @@ Trae la marca de tiempo del último envío registrado para este grupo.
 
 #### Columna G: `link_invitacion`
 
-Genera el enlace personalizado a la invitación web. Reemplazar `https://carolina-xv.vercel.app` por la URL de producción.
+Genera el enlace personalizado a la invitación web. Reemplazar `https://milagroscarolinaherrera.app` por la URL de producción.
 
 - **Fórmula:**
   ```excel
-  ="https://carolina-xv.vercel.app/?g=" & A2
+  ="https://milagroscarolinaherrera.app/?g=" & A2
   ```
 
 ---

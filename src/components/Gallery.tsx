@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import CircularCarousel, { type CircularCarouselItem } from './CircularCarousel'
+import DepthCarousel, { type DepthCarouselItem } from './DepthCarousel'
 import rawPhotos from '../data/photos.json'
 import styles from './Gallery.module.css'
 
@@ -26,19 +26,17 @@ const DEFAULT_PHOTOS: Photo[] = rawPhotos.map((p, index) => ({
 export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
-  // Map to CircularCarousel format
-  const carouselItems: CircularCarouselItem[] = useMemo(
+  // Map to DepthCarousel format
+  const carouselItems: DepthCarouselItem[] = useMemo(
     () =>
-      photos.map((photo, index) => ({
-        src: photo.src,
+      photos.map((photo) => ({
+        image: photo.src,
         alt: photo.alt,
-        title: photo.title || `Recuerdo ${index + 1}`,
-        subtitle: photo.caption || 'Mis 15 Años',
       })),
     [photos]
   )
 
-  const openLightbox = (_item: CircularCarouselItem, index: number) => {
+  const openLightbox = (_item: { image: string; alt?: string }, index: number) => {
     setLightboxIndex(index)
   }
 
@@ -48,12 +46,12 @@ export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
 
   const nextPhoto = useCallback(() => {
     if (lightboxIndex === null) return
-    setLightboxIndex((prev) => ((prev! + 1) % photos.length))
+    setLightboxIndex((prev) => (prev! + 1) % photos.length)
   }, [lightboxIndex, photos.length])
 
   const prevPhoto = useCallback(() => {
     if (lightboxIndex === null) return
-    setLightboxIndex((prev) => ((prev! - 1 + photos.length) % photos.length))
+    setLightboxIndex((prev) => (prev! - 1 + photos.length) % photos.length)
   }, [lightboxIndex, photos.length])
 
   // Keyboard navigation for Lightbox
@@ -93,38 +91,29 @@ export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
         </p>
 
         <div className={styles.carouselWrapper}>
-          <CircularCarousel
+          <DepthCarousel
             items={carouselItems}
-            preset="cylinder"
-            intro="rise"
-            cardWidth={210}
-            aspectRatio={0.75}
-            gap={20}
-            curve={1}
-            tilt={-4}
-            autoplay="drift"
-            speed={9}
-            direction="left"
-            draggable={true}
-            momentum={0.65}
-            snap={true}
-            pauseOnHover={true}
-            focusOnClick={true}
-            depthFade={0.6}
-            innerShade={0.5}
-            cornerRadius={16}
-            fadeColor="var(--bg-deep)"
-            captions={false}
+            cardWidth={285}
+            cardHeight={380}
+            radius={18}
+            depth={220}
+            spread={90}
+            tilt={22}
+            tiltDirection="right"
+            perspective={1400}
+            visibleCards={4}
+            falloff={0.2}
+            blur={6}
+            duration={700}
+            ease="power3.out"
+            autoplay={true}
+            autoplayDelay={3600}
+            loop={true}
+            showControls={false}
+            showIndicators={false}
+            tint="#050814"
             onItemClick={openLightbox}
           />
-        </div>
-
-        <div className={styles.swipeCues} aria-hidden="true">
-          <span>‹</span>
-          <span>Arrastrá para girar</span>
-          <span className={styles.swipeCueDot}>✦</span>
-          <span>Tocá para ampliar</span>
-          <span>›</span>
         </div>
       </div>
 

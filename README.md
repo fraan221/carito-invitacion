@@ -40,6 +40,13 @@ carito-invitacion/
 ├── package.json               # Dependencias y scripts
 ├── vite.config.ts             # Configuración de Vite
 ├── tsconfig.json              # Configuración de TypeScript
+├── public/                    # Assets estáticos y favicons
+│   ├── favicon.svg            # Monograma "XV" en plata líquida sobre azul noche (vectorial SVG)
+│   ├── favicon-32.png         # Favicon rasterizado 32x32 px para pestañas de navegador
+│   ├── favicon-512.png        # Icono de alta resolución 512x512 px (PWA / Android)
+│   ├── favicon.ico            # Favicon multiresolución tradicional (16x16, 32x32, 48x48)
+│   ├── apple-touch-icon.png   # Icono para dispositivos Apple iOS (180x180 px)
+│   └── icons.svg              # Sprite SVG de iconos
 ├── backend/
 │   ├── Code.gs                # Código fuente de Google Apps Script (API backend para RSVP)
 │   ├── Code.test.ts           # Tests unitarios del backend simulado en TypeScript
