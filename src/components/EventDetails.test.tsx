@@ -25,11 +25,18 @@ describe('EventDetails (Hardened Resilience & Edge Cases)', () => {
       expect(screen.getByText(/21:00 a 05:00 hs/i)).toBeInTheDocument();
       expect(screen.getByText(/confirmar asistencia hasta el/i)).toBeInTheDocument();
       expect(screen.getByText(/15 de Enero de 2027/i)).toBeInTheDocument();
+      expect(screen.getByText(/15\/01\/2027/i)).toBeInTheDocument();
     });
 
-    it('renders custom rsvp deadline when passed as prop', () => {
-      render(<EventDetails rsvpDeadline="20 de Enero de 2027" />);
+    it('renders custom rsvp deadline and short mobile deadline when passed as props', () => {
+      render(
+        <EventDetails
+          rsvpDeadline="20 de Enero de 2027"
+          rsvpDeadlineShort="20/01/2027"
+        />
+      );
       expect(screen.getByText(/20 de Enero de 2027/i)).toBeInTheDocument();
+      expect(screen.getByText(/20\/01\/2027/i)).toBeInTheDocument();
     });
 
     it('defensively normalizes empty or whitespace-only string props to defaults', () => {

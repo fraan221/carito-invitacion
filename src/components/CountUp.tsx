@@ -3,10 +3,12 @@
 import { animate, cubicBezier } from 'motion/react';
 import { useState as useInViewState } from 'react';
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { toRoman } from '../utils/roman';
+import styles from './CountUp.module.css';
 
 type Easing = 'easeOut' | 'linear' | 'expo' | 'spring';
 
-interface CountUpProps {
+export interface CountUpProps {
   to: number;
   from?: number;
   direction?: 'up' | 'down';
@@ -59,27 +61,6 @@ type Live = {
   delay: number;
 };
 
-
-const toRoman = (num: number): string => {
-  const rounded = Math.round(num);
-  if (rounded <= 0) return "I";
-  const lookup: [number, string][] = [
-    [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
-    [100, "C"], [90, "XC"], [50, "L"], [40, "XL"],
-    [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]
-  ];
-  let result = "";
-  let n = rounded;
-  for (const [val, roman] of lookup) {
-    while (n >= val) {
-      result += roman;
-      n -= val;
-    }
-  }
-  return result || "I";
-};
-
-
 const useSafeInView = (
   targetRef: React.RefObject<Element | null>,
   options?: { once?: boolean; margin?: string }
@@ -111,6 +92,7 @@ const useSafeInView = (
 };
 
 const CELL = 1.2;
+const ROMAN_CELL = 1.15;
 const STAGGER = 0.07;
 const UNITS: [number, string][] = [
   [1e12, 'T'],
@@ -243,7 +225,198 @@ const buildRoll = (
   return { slots, columns, label };
 };
 
-export default function CountUp({
+/**
+ * Purpose-built upward ascending Roman numeral reel.
+ * Crafts a cinematic, deliberate upward transit from starting numeral to target numeral,
+ * featuring celestial vertical gradient masking, velocity-based motion blur, and a majestic
+ * settling cushion with radiant liquid silver shimmer.
+ */
+export function RomanReel({
+  to,
+  from = 1,
+  direction = 'up',
+  delay = 0.3,
+  duration = 3.4,
+  className = '',
+  style,
+  startWhen = true,
+  trigger = 'load',
+  replayOnHover = true,
+  prefix = '',
+  suffix = '',
+  onStart,
+  onEnd
+}: CountUpProps) {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const viewportRef = useRef<HTMLSpanElement>(null);
+  const stripRef = useRef<HTMLSpanElement>(null);
+  const [replayKey, setReplayKey] = useState(0);
+  const [isSettled, setIsSettled] = useState(() => {
+    return (
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true
+    );
+  });
+  const runningRef = useRef(false);
+
+  const startNum = direction === 'down' ? to : from;
+  const endNum = direction === 'down' ? from : to;
+  const targetRoman = toRoman(endNum);
+
+  const romanList = useMemo(() => {
+    const list: string[] = [];
+    if (startNum <= endNum) {
+      for (let i = startNum; i <= endNum; i++) {
+        list.push(toRoman(i));
+      }
+    } else {
+      for (let i = startNum; i >= endNum; i--) {
+        list.push(toRoman(i));
+      }
+    }
+    return list;
+  }, [startNum, endNum]);
+
+  const targetIndex = Math.max(0, romanList.length - 1);
+  const isInView = useSafeInView(containerRef, { once: true, margin: '0px' });
+  const active = trigger === 'load' || typeof IntersectionObserver === 'undefined' || isInView;
+
+  useEffect(() => {
+    if (!active || !startWhen) return undefined;
+    const strip = stripRef.current;
+    if (!strip) return undefined;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+    if (prefersReducedMotion) {
+      strip.style.transform = `translate3d(0, ${(-targetIndex * ROMAN_CELL).toFixed(3)}em, 0)`;
+      strip.style.filter = 'none';
+      onEnd?.();
+      return undefined;
+    }
+
+    // oxlint-disable-next-line react/set-state-in-effect
+    setIsSettled(false);
+    runningRef.current = true;
+    onStart?.();
+
+    // Reset position to index 0 at start of play
+    strip.style.transform = 'translate3d(0, 0, 0)';
+    strip.style.filter = 'none';
+
+    // Cinematic easing curve for Roman ascension:
+    // Starts with smooth anticipation ramp (I -> II -> III),
+    // accelerates into fluid upward ascension (IV -> XI) with velocity streak,
+    // then enters a dramatic, regal deceleration (XII -> XIII -> XIV),
+    // and smoothly glides to settle on XV with a tiny tactile cushion.
+    const baseEase = cubicBezier(0.18, 0.88, 0.2, 1.0);
+    const ease = (p: number) => {
+      if (p <= 0) return 0;
+      if (p >= 1) return 1;
+      const b = baseEase(p);
+      if (p > 0.85) {
+        const settlePhase = (p - 0.85) / 0.15;
+        const overshoot = Math.sin(settlePhase * Math.PI) * 0.008;
+        return Math.min(1.01, b + overshoot);
+      }
+      return b;
+    };
+
+    const total = Math.max(0.1, duration);
+
+    const controls = animate(0, total, {
+      duration: total,
+      delay: replayKey === 0 ? delay : 0,
+      ease: 'linear',
+      onUpdate: (t) => {
+        const p = clamp01(t / total);
+        const easedP = ease(p);
+        const currentStep = targetIndex * easedP;
+        const yOffset = -(currentStep * ROMAN_CELL);
+
+        strip.style.transform = `translate3d(0, ${yOffset.toFixed(3)}em, 0)`;
+
+        // Calculate velocity for directional streak blur
+        const p0 = Math.max(0, p - 0.006);
+        const p1 = Math.min(1, p + 0.006);
+        const speed = (targetIndex * (baseEase(p1) - baseEase(p0))) / (p1 - p0) / total;
+        const blurY = p > 0.04 && p < 0.92 ? Math.min(2.5, speed * 0.16) : 0;
+
+        if (blurY > 0.25) {
+          strip.style.filter = `blur(0px ${blurY.toFixed(2)}px)`;
+        } else {
+          strip.style.filter = 'none';
+        }
+      },
+      onComplete: () => {
+        strip.style.transform = `translate3d(0, ${(-targetIndex * ROMAN_CELL).toFixed(3)}em, 0)`;
+        strip.style.filter = 'none';
+        setIsSettled(true);
+        runningRef.current = false;
+        onEnd?.();
+      }
+    });
+
+    return () => {
+      controls.stop();
+      runningRef.current = false;
+    };
+  }, [active, startWhen, replayKey, targetIndex, duration, delay, onStart, onEnd]);
+
+  const replay = () => {
+    if (!replayOnHover || runningRef.current) return;
+    setReplayKey(k => k + 1);
+  };
+
+  return (
+    <span
+      ref={containerRef}
+      className={`${styles.romanContainer} ${className}`}
+      style={style}
+      onPointerEnter={replayOnHover ? replay : undefined}
+      title={replayOnHover ? 'Toca o pasa el cursor para revivir la animación' : undefined}
+    >
+      {/* Ghost/settled numeral: displays cleanly when settled with full text-shadow */}
+      <span
+        className={`${styles.ghost} ${isSettled ? `${styles.ghostVisible} ${styles.settledNumeral}` : ''}`}
+        aria-hidden="true"
+      >
+        {prefix}{targetRoman}{suffix}
+      </span>
+
+      {/* Screen reader announcement */}
+      <span style={SR_ONLY}>
+        {prefix}{targetRoman}{suffix}
+      </span>
+
+      {/* Vertical celestial reel viewport - active during roll, cleanly hidden when settled */}
+      <span
+        ref={viewportRef}
+        aria-hidden="true"
+        className={`${styles.viewport} ${isSettled ? styles.viewportSettled : ''}`}
+      >
+        <span ref={stripRef} className={styles.strip}>
+          {romanList.map((item, index) => {
+            const isLast = index === targetIndex;
+            return (
+              <span
+                key={index}
+                className={styles.cell}
+                style={isSettled && !isLast ? { visibility: 'hidden' } : undefined}
+              >
+                {prefix}{item}{suffix}
+              </span>
+            );
+          })}
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function StandardCountUp({
   to,
   from = 0,
   direction = 'up',
@@ -286,15 +459,12 @@ export default function CountUp({
       if (customFormatter) {
         return `${prefix}${customFormatter(latest)}${suffix}`;
       }
-      if (format === 'roman') {
-        return `${prefix}${toRoman(latest)}${suffix}`;
-      }
       const { size, label, digits } = scaleFor(latest, compact, decimals, places);
       const parts = splitNumber(latest, digits, size);
       const body = `${parts.negative ? '-' : ''}${group(parts.int, separator)}${parts.frac ? `.${parts.frac}` : ''}`;
       return `${prefix}${body}${label}${suffix}`;
     },
-    [customFormatter, format, compact, decimals, places, separator, prefix, suffix]
+    [customFormatter, compact, decimals, places, separator, prefix, suffix]
   );
 
   const model = useMemo(() => {
@@ -330,6 +500,7 @@ export default function CountUp({
   useEffect(() => {
     if (!active || !startWhen) return;
     startedRef.current = true;
+    // oxlint-disable-next-line react/set-state-in-effect
     setPlay(previous => ({
       id: (previous?.id || 0) + 1,
       from: valueRef.current,
@@ -575,4 +746,11 @@ export default function CountUp({
       )}
     </span>
   );
+}
+
+export default function CountUp(props: CountUpProps) {
+  if (props.format === 'roman') {
+    return <RomanReel {...props} />;
+  }
+  return <StandardCountUp {...props} />;
 }

@@ -145,16 +145,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--color-silver-light);
-  background: rgba(30, 58, 138, 0.25);
-  border: 1px solid var(--border-subtle);
-  padding: 0.35rem 0.85rem;
+  background: rgba(30, 58, 138, 0.35);
+  border: 1px solid var(--border-silver);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+  padding: 0.45rem 1rem;
   border-radius: 999px;
   letter-spacing: 0.02em;
-  margin-block-start: 0.25rem;
+  margin-block-start: 0.5rem;
 }
 
 .deadlineIcon {
@@ -165,6 +166,14 @@
 .deadlineHighlight {
   color: var(--text-main);
   font-weight: 600;
+}
+
+.desktopDeadline {
+  display: inline;
+}
+
+.mobileDeadline {
+  display: none;
 }
 
 /* Constellation Divider */
@@ -536,6 +545,20 @@
 
 /* Mobile viewports */
 @media (max-width: 480px) {
+  .desktopDeadline {
+    display: none;
+  }
+
+  .mobileDeadline {
+    display: inline;
+  }
+
+  .rsvpDeadlineBadge {
+    font-size: 0.8125rem;
+    padding: 0.35rem 0.85rem;
+    gap: 0.35rem;
+  }
+
   .actions {
     max-width: 100%;
   }

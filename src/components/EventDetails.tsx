@@ -20,6 +20,7 @@ export interface EventDetailsProps {
   date?: string;
   time?: string;
   rsvpDeadline?: string;
+  rsvpDeadlineShort?: string;
   mapsUrl?: string;
   googleCalendarUrl?: string;
 }
@@ -30,6 +31,7 @@ const DEFAULT_ADDRESS =
 const DEFAULT_DATE = "Sábado 6 de Febrero de 2027";
 const DEFAULT_TIME = "21:00 a 05:00 hs";
 const DEFAULT_RSVP_DEADLINE = "15 de Enero de 2027";
+const DEFAULT_RSVP_DEADLINE_SHORT = "15/01/2027";
 const DEFAULT_MAPS_URL =
   "https://maps.google.com/?q=Salon+Royal+Night+Cno+Gral+Belgrano+5599+Florencio+Varela";
 const DEFAULT_GCAL_URL =
@@ -54,6 +56,7 @@ export default function EventDetails({
   date = DEFAULT_DATE,
   time = DEFAULT_TIME,
   rsvpDeadline = DEFAULT_RSVP_DEADLINE,
+  rsvpDeadlineShort = DEFAULT_RSVP_DEADLINE_SHORT,
   mapsUrl = DEFAULT_MAPS_URL,
   googleCalendarUrl = DEFAULT_GCAL_URL,
 }: EventDetailsProps) {
@@ -63,6 +66,8 @@ export default function EventDetails({
   const cleanDate = date?.trim() || DEFAULT_DATE;
   const cleanTime = time?.trim() || DEFAULT_TIME;
   const cleanRsvpDeadline = rsvpDeadline?.trim() || DEFAULT_RSVP_DEADLINE;
+  const cleanRsvpDeadlineShort =
+    rsvpDeadlineShort?.trim() || DEFAULT_RSVP_DEADLINE_SHORT;
 
   // Safe external URLs with automatic query fallback if blank
   const safeMapsUrl = useMemo(() => {
@@ -225,10 +230,16 @@ export default function EventDetails({
                 aria-hidden="true"
                 className={styles.deadlineIcon}
               />
-              <span>
+              <span className={styles.desktopDeadline}>
                 Confirmar asistencia hasta el{" "}
                 <strong className={styles.deadlineHighlight}>
                   {cleanRsvpDeadline}
+                </strong>
+              </span>
+              <span className={styles.mobileDeadline}>
+                Confirmar hasta el{" "}
+                <strong className={styles.deadlineHighlight}>
+                  {cleanRsvpDeadlineShort}
                 </strong>
               </span>
             </div>

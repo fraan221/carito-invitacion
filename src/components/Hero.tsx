@@ -17,9 +17,10 @@ export default function Hero() {
               from={1}
               to={15}
               format="roman"
-              easing="expo"
-              duration={2.2}
+              duration={3.4}
+              delay={0.3}
               trigger="load"
+              replayOnHover
             />
           </span>
         </h1>
