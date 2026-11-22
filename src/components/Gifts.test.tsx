@@ -35,7 +35,7 @@ describe('Gifts Section', () => {
     expect(screen.getByRole('button', { name: /transferencia/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /efectivo/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /regalo físico/i })).toBeInTheDocument()
-    expect(screen.queryByText('mili.caro.herrera')).not.toBeInTheDocument()
+    expect(screen.queryByText('mili.caro.herrera.')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /copiar alias/i })).not.toBeInTheDocument()
   })
 
@@ -49,7 +49,7 @@ describe('Gifts Section', () => {
     })
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'transferencia')
-    expect(screen.getByText('mili.caro.herrera')).toBeInTheDocument()
+    expect(screen.getByText('mili.caro.herrera.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /copiar alias/i })).toBeInTheDocument()
   })
 
@@ -63,7 +63,7 @@ describe('Gifts Section', () => {
     })
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'efectivo')
-    expect(screen.queryByText('mili.caro.herrera')).not.toBeInTheDocument()
+    expect(screen.queryByText('mili.caro.herrera.')).not.toBeInTheDocument()
     expect(screen.getByText(/muchas gracias por tu cariño/i)).toBeInTheDocument()
   })
 
@@ -77,7 +77,7 @@ describe('Gifts Section', () => {
     })
 
     expect(submitGiftPreference).toHaveBeenCalledWith('casa', 'fisico')
-    expect(screen.queryByText('mili.caro.herrera')).not.toBeInTheDocument()
+    expect(screen.queryByText('mili.caro.herrera.')).not.toBeInTheDocument()
     expect(screen.getByText(/muchas gracias por tu cariño/i)).toBeInTheDocument()
   })
 
@@ -85,7 +85,7 @@ describe('Gifts Section', () => {
     sessionStorage.setItem('carito_gift_pref_casa', 'transferencia')
     render(<Gifts groupCode="casa" />)
 
-    expect(screen.getByText('mili.caro.herrera')).toBeInTheDocument()
+    expect(screen.getByText('mili.caro.herrera.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /copiar alias/i })).toBeInTheDocument()
   })
 
@@ -99,7 +99,7 @@ describe('Gifts Section', () => {
     })
 
     expect(submitGiftPreference).not.toHaveBeenCalled()
-    expect(screen.getByText('mili.caro.herrera')).toBeInTheDocument()
+    expect(screen.getByText('mili.caro.herrera.')).toBeInTheDocument()
   })
 
   it('copies alias to clipboard and shows temporary feedback on click', async () => {
@@ -117,7 +117,7 @@ describe('Gifts Section', () => {
       fireEvent.click(copyBtn)
     })
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('mili.caro.herrera')
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('mili.caro.herrera.')
     expect(screen.getByText(/¡copiado!/i)).toBeInTheDocument()
 
     // After 2 seconds, feedback resets
@@ -138,12 +138,12 @@ describe('Gifts Section', () => {
       vi.advanceTimersByTime(350)
     })
 
-    const aliasTouchable = screen.getByRole('button', { name: /alias: mili\.caro\.herrera/i })
+    const aliasTouchable = screen.getByRole('button', { name: /alias: mili\.caro\.herrera\./i })
     await act(async () => {
       fireEvent.click(aliasTouchable)
     })
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('mili.caro.herrera')
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('mili.caro.herrera.')
     expect(screen.getByText(/¡copiado!/i)).toBeInTheDocument()
 
     act(() => {

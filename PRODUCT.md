@@ -36,7 +36,7 @@ web (mobile-first)
   - Validación nominal de grupo por parámetro de URL (`?g=CODE`) o ingreso manual de código de pase.
   - Formulario RSVP con control dinámico de cupos máximos y envío directo al backend.
   - Datos de evento (Salón Royal Night, Florencio Varela) con apertura directa en Google Maps.
-  - Copia al portapapeles del alias bancario (`mili.caro.herrera`) con feedback visual instantáneo.
+  - Copia al portapapeles del alias bancario (`mili.caro.herrera.`) con feedback visual instantáneo.
   - Cuenta regresiva interactiva y precisa hasta el 6 de febrero de 2027 a las 21:00 hs.
 - Restricciones y decisiones descartadas:
   - **CONCEPTO DE SOBRE COMPLETAMENTE DESCARTADO**: Se descarta de manera definitiva cualquier apertura simulada de sobre, solapa, sello de cera, medallón de apertura o ritual de unboxing físico. La invitación inicia directamente en la experiencia digital.
@@ -60,7 +60,7 @@ web (mobile-first)
 - Fecha y hora: Sábado 6 de Febrero de 2027, 21:00 a 05:00 hs.
 - Salón: Royal Night, Cno. Gral. Belgrano 5599, B1888 Florencio Varela, Provincia de Buenos Aires.
 - Enlace Maps confirmado: Google Maps del salón Royal Night.
-- Alias bancario confirmado: `mili.caro.herrera`.
+- Alias bancario confirmado: `mili.caro.herrera.`.
 - Backend Apps Script funcional con tests unitarios (`backend/Code.test.ts`) y fórmulas documentadas (`backend/SHEETS_FORMULAS.md`).
 - Generador de enlaces nominales por lote probado (`scripts/generate-links.ts`).
 - Identidad visual de favicons completa y vinculada en `index.html`: SVG vectorial escalable con degradé en plata, PNGs 32x32 y 512x512, ICO multi-resolución y Apple Touch Icon 180x180.
