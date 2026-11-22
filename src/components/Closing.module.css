@@ -71,20 +71,7 @@
   letter-spacing: 0.05em;
   color: var(--color-silver-light);
   margin: 0;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
-}
-
-@supports (-webkit-background-clip: text) {
-  .title {
-    background: linear-gradient(
-      180deg,
-      var(--color-silver-light) 0%,
-      var(--color-silver) 65%,
-      var(--color-silver-dark) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+  text-shadow: 0 0 16px var(--color-silver-glow), 0 2px 20px rgba(0, 0, 0, 0.6);
 }
 
 .message {
