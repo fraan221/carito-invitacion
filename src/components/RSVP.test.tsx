@@ -75,6 +75,38 @@ describe('RSVP Component', () => {
     expect(screen.getByText(/20 de Diciembre de 2026/i)).toBeInTheDocument()
   })
 
+  it('handles manual code verification when sessionStorage has previous submitted response for another group', async () => {
+    // Simulate user previously confirmed for "otro-grupo"
+    sessionStorage.setItem(
+      'carito_rsvp_submitted',
+      JSON.stringify({ code: 'otro-grupo', asiste: true, nombre: 'Otro Invitado' })
+    )
+    window.location.search = '' // Landed with no code in URL
+
+    vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 2 })
+
+    render(<RSVP />)
+
+    // Initially sees fallback prompt
+    expect(screen.getByText(/no te encontramos en la lista de invitados/i)).toBeInTheDocument()
+
+    // Open manual entry form
+    const toggleButton = screen.getByRole('button', { name: /¿tenés tu código de invitación\?/i })
+    fireEvent.click(toggleButton)
+
+    const input = screen.getByPlaceholderText(/ej: familia-perez/i)
+    fireEvent.change(input, { target: { value: 'nuevo-grupo' } })
+
+    const submitBtn = screen.getByRole('button', { name: /verificar pase/i })
+    fireEvent.click(submitBtn)
+
+    // Must show active RSVP form, NOT a false "¡Muchas gracias por confirmar!" screen
+    await waitFor(() => {
+      expect(screen.getByLabelText(/tu nombre y apellido/i)).toBeInTheDocument()
+    })
+    expect(screen.queryByText(/muchas gracias por confirmar/i)).not.toBeInTheDocument()
+  })
+
   it('renders custom rsvpDeadline in prompt when prop provided', async () => {
     window.location.search = '?g=familia-perez'
     vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 4 })

@@ -627,7 +627,7 @@ const StarBorder = <T extends React.ElementType = 'button'>({
 
   useEffect(() => {
     wakeRef.current?.();
-  });
+  }, []);
 
   return (
     <Component

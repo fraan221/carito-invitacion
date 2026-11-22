@@ -70,6 +70,18 @@ describe('parseGuestCsv', () => {
     expect(guests[2].slug).toBe('fran-p');
     expect(guests[2].cantidad).toBe(2);
   });
+
+  it('correctly parses fields containing commas within quotation marks', () => {
+    const csvWithCommas = `N°,Columna en la hoja,Invitado / Grupo,Cantidad de personas,Estado,Observaciones
+1,Izquierda,"Familia Pérez, González",5,Pendiente,"Confirmado, viene con auto"`;
+
+    const guests = parseGuestCsv(csvWithCommas, 'https://milagroscarolinaherrera.app');
+    expect(guests).toHaveLength(1);
+    expect(guests[0].nombre).toBe('Familia Pérez, González');
+    expect(guests[0].cantidad).toBe(5);
+    expect(guests[0].slug).toBe('familia-perez-gonzalez');
+    expect(guests[0].observaciones).toBe('Confirmado, viene con auto');
+  });
 });
 
 describe('generateLinksFromCsv', () => {

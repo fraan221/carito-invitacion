@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import CountUp from "./CountUp";
-import FadeContent from "./FadeContent";
 import styles from "./Countdown.module.css";
 
 export const DEFAULT_TARGET_DATE = "2027-02-06T21:00:00-03:00";
@@ -58,12 +57,18 @@ export default function Countdown({
   );
 
   useEffect(() => {
+    if (timeLeft.isExpired) return;
+
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeRemaining(targetDate));
+      const nextTime = calculateTimeRemaining(targetDate);
+      setTimeLeft(nextTime);
+      if (nextTime.isExpired) {
+        clearInterval(timer);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [targetDate]);
+  }, [targetDate, timeLeft.isExpired]);
 
   const units = [
     { label: "Días", value: timeLeft.days, animate: true },
@@ -79,13 +84,7 @@ export default function Countdown({
       aria-label="Cuenta regresiva"
       className={styles.section}
     >
-      <FadeContent
-        duration={0.8}
-        blur={false}
-        trigger="mount"
-        ease="power2.out"
-      >
-        <div className={styles.alignmentWrapper}>
+      <div className={styles.alignmentWrapper}>
           {timeLeft.isExpired ? (
             /* Celebration Mode: Party has started or target date reached */
             <div className={styles.celebrationWrapper}>
@@ -178,7 +177,6 @@ export default function Countdown({
             </>
           )}
         </div>
-      </FadeContent>
     </section>
   );
 }

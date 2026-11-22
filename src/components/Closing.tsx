@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { ArrowUp, Check } from 'lucide-react'
-import FadeContent from './FadeContent'
 import styles from './Closing.module.css'
 
 export default function Closing() {
@@ -52,13 +51,7 @@ export default function Closing() {
     >
       <div className={styles.aura} aria-hidden="true" />
 
-      <FadeContent
-        duration={0.8}
-        blur={false}
-        trigger="mount"
-        ease="power2.out"
-      >
-        <div className={styles.container}>
+      <div className={styles.container}>
           <div className={styles.herald} aria-hidden="true">
             <span className={styles.heraldLine} />
             <span className={styles.heraldMonogram}>XV</span>
@@ -101,7 +94,6 @@ export default function Closing() {
             </a>
           </div>
         </div>
-      </FadeContent>
     </footer>
   )
 }

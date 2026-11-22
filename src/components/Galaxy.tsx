@@ -601,11 +601,14 @@ const Galaxy = ({
       }
     });
     intersection.observe(container);
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('pointerdown', onPointerDown, { passive: true });
-    window.addEventListener('pointerup', onPointerUp, { passive: true });
-    window.addEventListener('pointercancel', onPointerUp, { passive: true });
-    document.documentElement.addEventListener('pointerleave', onPointerLeave);
+    const interactive = initial.mouseInteraction || initial.clickWarp;
+    if (interactive) {
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      window.addEventListener('pointerdown', onPointerDown, { passive: true });
+      window.addEventListener('pointerup', onPointerUp, { passive: true });
+      window.addEventListener('pointercancel', onPointerUp, { passive: true });
+      document.documentElement.addEventListener('pointerleave', onPointerLeave);
+    }
     document.addEventListener('visibilitychange', onVisibility);
     resize();
 
@@ -632,11 +635,13 @@ const Galaxy = ({
       wakeRef.current = null;
       resizeObserver.disconnect();
       intersection.disconnect();
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerdown', onPointerDown);
-      window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', onPointerUp);
-      document.documentElement.removeEventListener('pointerleave', onPointerLeave);
+      if (interactive) {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerdown', onPointerDown);
+        window.removeEventListener('pointerup', onPointerUp);
+        window.removeEventListener('pointercancel', onPointerUp);
+        document.documentElement.removeEventListener('pointerleave', onPointerLeave);
+      }
       document.removeEventListener('visibilitychange', onVisibility);
       programs.forEach(found => found.program && gl.deleteProgram(found.program));
       gl.deleteBuffer(buffer);
@@ -647,7 +652,7 @@ const Galaxy = ({
 
   useEffect(() => {
     wakeRef.current?.();
-  });
+  }, []);
 
   return (
     <div ref={containerRef} className={`galaxy-container${className ? ` ${className}` : ''}`} style={style} {...rest}>

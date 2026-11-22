@@ -11,7 +11,6 @@ import {
   Shirt,
   Car,
 } from "lucide-react";
-import FadeContent from "./FadeContent";
 import styles from "./EventDetails.module.css";
 
 export interface EventDetailsProps {
@@ -180,13 +179,7 @@ export default function EventDetails({
       aria-label="Detalles del evento y ubicación"
       className={styles.section}
     >
-      <FadeContent
-        duration={0.8}
-        blur={false}
-        trigger="mount"
-        ease="power2.out"
-      >
-        <div className={styles.editorialFlow}>
+      <div className={styles.editorialFlow}>
           {/* Celestial heraldic top line */}
           <div className={styles.herald} aria-hidden="true">
             <span className={styles.heraldLine} />
@@ -366,7 +359,6 @@ export default function EventDetails({
             {copiedAddress ? "Dirección copiada al portapapeles" : ""}
           </span>
         </div>
-      </FadeContent>
     </section>
   );
 }

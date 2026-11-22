@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { Copy, Check, Sparkles, HeartHandshake, Gift, Heart } from "lucide-react";
-import FadeContent from "./FadeContent";
 import ClickSpark from "./ClickSpark";
 import { submitGiftPreference } from "../api";
 import type { GiftPreferenceType } from "../types";
@@ -40,7 +39,8 @@ export default function Gifts({
       : typeof window !== "undefined"
       ? new URLSearchParams(window.location.search).get("g") ?? ""
       : "";
-  const effectiveGroupCode = rawCode.trim().toLowerCase();
+  const initialGroupCode = rawCode.trim().toLowerCase();
+  const [effectiveGroupCode, setEffectiveGroupCode] = useState(initialGroupCode);
 
   const storageKey = effectiveGroupCode
     ? `carito_gift_pref_${effectiveGroupCode}`
@@ -64,6 +64,32 @@ export default function Gifts({
       return null;
     }
   );
+
+  useEffect(() => {
+    const handleCodeValidated = (e: Event) => {
+      const customEvent = e as CustomEvent<{ code: string }>;
+      if (customEvent.detail?.code) {
+        const newCode = customEvent.detail.code.trim().toLowerCase();
+        setEffectiveGroupCode(newCode);
+        try {
+          const saved = sessionStorage.getItem(`carito_gift_pref_${newCode}`);
+          if (
+            saved === "transferencia" ||
+            saved === "efectivo" ||
+            saved === "fisico"
+          ) {
+            setSelectedGift(saved);
+          }
+        } catch {
+          // Ignore storage error
+        }
+      }
+    };
+    window.addEventListener("rsvp:code_validated", handleCodeValidated);
+    return () => {
+      window.removeEventListener("rsvp:code_validated", handleCodeValidated);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -147,13 +173,7 @@ export default function Gifts({
       aria-label="Regalos y transferencias"
       className={styles.section}
     >
-      <FadeContent
-        duration={0.8}
-        blur={false}
-        trigger="mount"
-        ease="power2.out"
-      >
-        <div className={styles.editorialFlow}>
+      <div className={styles.editorialFlow}>
           {/* Celestial heraldic divider */}
           <div className={styles.herald} aria-hidden="true">
             <span className={styles.heraldLine} />
@@ -330,7 +350,6 @@ export default function Gifts({
               : ""}
           </span>
         </div>
-      </FadeContent>
     </section>
   );
 }

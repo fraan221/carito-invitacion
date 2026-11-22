@@ -95,11 +95,21 @@ function doPost(e) {
       return jsonResponse({ success: true });
     }
 
+    const nombre = data.nombre ? String(data.nombre).trim() : '';
+    if (!nombre) {
+      return jsonResponse({ success: false, error: 'Nombre es requerido' });
+    }
+
     const asiste = Boolean(data.asiste);
     const cantidad = asiste ? Number(data.cantidad || 0) : 0;
 
-    if (asiste && (cantidad < 1 || cantidad > group.maxPersonas)) {
-      return jsonResponse({ success: false, error: 'Excede capacidad autorizada' });
+    if (asiste) {
+      if (!Number.isInteger(cantidad) || cantidad < 1) {
+        return jsonResponse({ success: false, error: 'Cantidad inválida' });
+      }
+      if (cantidad > group.maxPersonas) {
+        return jsonResponse({ success: false, error: 'Excede capacidad autorizada' });
+      }
     }
 
     const sheetResponses = getSheet(SHEET_RESPONSES);
@@ -110,8 +120,8 @@ function doPost(e) {
     const timestamp = new Date();
     sheetResponses.appendRow([
       timestamp,
-      group.code,
-      data.nombre ? String(data.nombre).trim() : '',
+      String(group.code).trim().toLowerCase(),
+      nombre,
       asiste ? 'Sí' : 'No',
       cantidad,
       data.acompanantes ? String(data.acompanantes).trim() : '',
@@ -121,7 +131,13 @@ function doPost(e) {
   } catch (err) {
     return jsonResponse({ success: false, error: err.message });
   } finally {
-    lock.releaseLock();
+    if (lock && (typeof lock.hasLock === 'function' ? lock.hasLock() : true)) {
+      try {
+        lock.releaseLock();
+      } catch (_) {
+        // Ignore lock release error if lock expired or was not acquired
+      }
+    }
   }
 }
 

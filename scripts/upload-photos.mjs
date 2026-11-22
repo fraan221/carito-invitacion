@@ -26,8 +26,12 @@ if (!token) {
   process.exit(1)
 }
 
-const rawDir = '/home/fraan/Pictures/carito'
-const optDir = '/tmp/carito-optimized'
+const rawDir =
+  process.env.PHOTOS_RAW_DIR ||
+  (process.argv[2] && !process.argv[2].startsWith('--')
+    ? process.argv[2]
+    : path.resolve('photos-raw'))
+const optDir = process.env.PHOTOS_OPT_DIR || '/tmp/carito-optimized'
 
 // If --optimize is passed or optDir does not exist, run python optimization
 const shouldOptimize =

@@ -15,7 +15,8 @@ export async function validateGroup(
 
   try {
     // shortcut: uses window.location.origin as fallback base when baseUrl is empty/relative, upgrade if SSR is used
-    const url = new URL(baseUrl || window.location.origin)
+    const fallbackOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
+    const url = new URL(baseUrl || fallbackOrigin)
     url.searchParams.set('g', cleanCode)
 
     const response = await fetch(url.toString(), {
@@ -55,7 +56,7 @@ export async function submitRSVP(
   baseUrl: string = getApiUrl()
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const url = baseUrl || window.location.origin
+    const url = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '')
     const response = await fetch(url, {
       method: 'POST',
       headers: {

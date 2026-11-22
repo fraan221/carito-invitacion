@@ -1,6 +1,6 @@
 'use client';
 
-import { animate, cubicBezier } from 'motion/react';
+import gsap from 'gsap';
 import { useState as useInViewState } from 'react';
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { toRoman } from '../utils/roman';
@@ -60,6 +60,27 @@ type Live = {
   duration: number;
   delay: number;
 };
+
+function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
+  return (t: number): number => {
+    if (t <= 0) return 0;
+    if (t >= 1) return 1;
+    const cx = 3 * x1;
+    const bx = 3 * (x2 - x1) - cx;
+    const ax = 1 - cx - bx;
+    const cy = 3 * y1;
+    const by = 3 * (y2 - y1) - cy;
+    const ay = 1 - cy - by;
+    let u = t;
+    for (let i = 0; i < 5; i++) {
+      const currentX = ((ax * u + bx) * u + cx) * u;
+      const currentSlope = (3 * ax * u + 2 * bx) * u + cx;
+      if (Math.abs(currentSlope) < 1e-6) break;
+      u -= (currentX - t) / currentSlope;
+    }
+    return ((ay * u + by) * u + cy) * u;
+  };
+}
 
 const useSafeInView = (
   targetRef: React.RefObject<Element | null>,
@@ -326,11 +347,14 @@ export function RomanReel({
 
     const total = Math.max(0.1, duration);
 
-    const controls = animate(0, total, {
+    const progressObj = { t: 0 };
+    const tween = gsap.to(progressObj, {
+      t: total,
       duration: total,
       delay: replayKey === 0 ? delay : 0,
-      ease: 'linear',
-      onUpdate: (t) => {
+      ease: 'none',
+      onUpdate: () => {
+        const t = progressObj.t;
         const p = clamp01(t / total);
         const easedP = ease(p);
         const currentStep = targetIndex * easedP;
@@ -356,11 +380,11 @@ export function RomanReel({
         setIsSettled(true);
         runningRef.current = false;
         onEnd?.();
-      }
+      },
     });
 
     return () => {
-      controls.stop();
+      tween.kill();
       runningRef.current = false;
     };
   }, [active, startWhen, replayKey, targetIndex, duration, delay, onStart, onEnd]);
@@ -629,16 +653,18 @@ function StandardCountUp({
       return undefined;
     }
 
-    const controls = animate(0, total, {
+    const progressObj = { t: 0 };
+    const tween = gsap.to(progressObj, {
+      t: total,
       duration: total,
       delay: play.wait ? live.delay : 0,
-      ease: 'linear',
-      onUpdate: render,
-      onComplete: finish
+      ease: 'none',
+      onUpdate: () => render(progressObj.t),
+      onComplete: finish,
     });
 
     return () => {
-      controls.stop();
+      tween.kill();
       runningRef.current = false;
     };
   }, [play, uid]);

@@ -1,4 +1,3 @@
-import FadeContent from "./FadeContent";
 import styles from "./Message.module.css";
 
 export default function Message() {
@@ -9,13 +8,7 @@ export default function Message() {
       aria-label="Mensaje de bienvenida"
       className={styles.section}
     >
-      <FadeContent
-        duration={0.8}
-        blur={false}
-        trigger="mount"
-        ease="power2.out"
-      >
-        <div className={styles.editorialFlow}>
+      <div className={styles.editorialFlow}>
           <h2 className={styles.srOnly}>Mensaje de bienvenida de Carito</h2>
 
           {/* Celestial heraldic divider */}
@@ -71,7 +64,6 @@ export default function Message() {
             </div>
           </footer>
         </div>
-      </FadeContent>
     </section>
   );
 }

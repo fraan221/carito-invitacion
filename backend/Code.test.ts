@@ -45,6 +45,7 @@ const mockSpreadsheet = {
   }),
 }
 
+let hasLockValue = true
 const waitLockMock = vi.fn()
 const releaseLockMock = vi.fn()
 
@@ -52,6 +53,7 @@ const releaseLockMock = vi.fn()
   getScriptLock: () => ({
     waitLock: waitLockMock,
     releaseLock: releaseLockMock,
+    hasLock: () => hasLockValue,
   }),
 }
 
@@ -68,6 +70,7 @@ describe('Google Apps Script Backend (Code.gs)', () => {
     ]
     mockResponsesAppended = []
     mockGiftPreferencesAppended = []
+    hasLockValue = true
     vi.clearAllMocks()
   })
 
@@ -147,6 +150,62 @@ describe('Google Apps Script Backend (Code.gs)', () => {
       expect(body.error).toContain('Excede capacidad autorizada')
       expect(mockResponsesAppended.length).toBe(0)
       expect(releaseLockMock).toHaveBeenCalled()
+    })
+
+    it('rechaza si el nombre está vacío o sólo contiene espacios', () => {
+      const payload = {
+        grupo_code: 'casa',
+        nombre: '   ',
+        asiste: true,
+        cantidad: 1,
+        acompanantes: '',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(false)
+      expect(body.error).toBe('Nombre es requerido')
+      expect(mockResponsesAppended.length).toBe(0)
+    })
+
+    it('rechaza cantidades que no sean enteros positivos', () => {
+      const payload = {
+        grupo_code: 'casa',
+        nombre: 'Carlos',
+        asiste: true,
+        cantidad: 2.5,
+        acompanantes: '',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(false)
+      expect(body.error).toContain('Cantidad inválida')
+      expect(mockResponsesAppended.length).toBe(0)
+    })
+
+    it('maneja el timeout del script lock de forma segura sin lanzar excepción en finally', () => {
+      waitLockMock.mockImplementationOnce(() => {
+        hasLockValue = false
+        throw new Error('Lock timeout')
+      })
+
+      const payload = {
+        grupo_code: 'casa',
+        nombre: 'Carlos',
+        asiste: true,
+        cantidad: 1,
+        acompanantes: '',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(false)
+      expect(body.error).toBe('Lock timeout')
+      expect(releaseLockMock).not.toHaveBeenCalled()
     })
 
     it('rechaza si el código de grupo no existe en la Lista maestra', () => {

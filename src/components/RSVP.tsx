@@ -8,7 +8,6 @@ import {
 import { validateGroup, submitRSVP } from "../api";
 import type { RSVPData } from "../types";
 import StarBorder from "./StarBorder";
-import FadeContent from "./FadeContent";
 import styles from "./RSVP.module.css";
 
 interface RSVPProps {
@@ -47,11 +46,11 @@ export default function RSVP({
   const [nombre, setNombre] = useState("");
   const [asiste, setAsiste] = useState(() => {
     try {
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && initialCode) {
         const stored = sessionStorage.getItem("carito_rsvp_submitted");
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (typeof parsed.asiste === "boolean") {
+          if (parsed.code === initialCode && typeof parsed.asiste === "boolean") {
             return parsed.asiste;
           }
         }
@@ -68,11 +67,11 @@ export default function RSVP({
   const [submitting, setSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(() => {
     try {
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && initialCode) {
         const stored = sessionStorage.getItem("carito_rsvp_submitted");
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (!code || parsed.code === code) {
+          if (parsed.code === initialCode) {
             return true;
           }
         }
@@ -128,11 +127,35 @@ export default function RSVP({
         setIsValidGroup(true);
         setMaxPersonas(Math.max(1, res.maxPersonas));
         setCantidad(1);
+
+        let previouslySubmitted = false;
+        try {
+          if (typeof window !== "undefined") {
+            const stored = sessionStorage.getItem("carito_rsvp_submitted");
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              if (parsed.code === normalized) {
+                previouslySubmitted = true;
+                if (typeof parsed.asiste === "boolean") setAsiste(parsed.asiste);
+                if (parsed.nombre) setNombre(parsed.nombre);
+              }
+            }
+          }
+        } catch {
+          // Ignore storage error
+        }
+        setIsSubmitted(previouslySubmitted);
+
         if (typeof window !== "undefined") {
           try {
             const url = new URL(window.location.href);
             url.searchParams.set("g", normalized);
             window.history.replaceState({}, "", url.toString());
+            window.dispatchEvent(
+              new CustomEvent("rsvp:code_validated", {
+                detail: { code: normalized, maxPersonas: res.maxPersonas },
+              })
+            );
           } catch {
             // Ignore history error
           }
@@ -201,13 +224,7 @@ export default function RSVP({
       aria-label="Confirmación de asistencia"
       className={styles.section}
     >
-      <FadeContent
-        duration={0.8}
-        blur={false}
-        trigger="mount"
-        ease="power2.out"
-      >
-        <div className={styles.editorialFlow}>
+      <div className={styles.editorialFlow}>
           {/* Celestial herald header */}
           <div className={styles.herald} aria-hidden="true">
             <span className={styles.heraldLine} />
@@ -466,7 +483,6 @@ export default function RSVP({
             </>
           )}
         </div>
-      </FadeContent>
     </section>
   );
 }

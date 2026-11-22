@@ -283,9 +283,12 @@ const DepthCarousel = ({
     const onWheel = (e: WheelEvent) => {
       const cfg = cfgRef.current;
       if (cfg.count < 2) return;
+      const isHorizontalDominant = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      // Only intercept horizontal wheel scrolls; never trap standard vertical page scrolling
+      if (!isHorizontalDominant) return;
       e.preventDefault();
       tweenRef.current?.kill();
-      const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      const raw = e.deltaX;
       const delta = e.deltaMode === 1 ? raw * 24 : raw;
       const step = clamp(delta / (cfg.cardWidth * 0.9), -0.6, 0.6);
       posRef.current += step;

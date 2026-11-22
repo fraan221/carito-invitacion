@@ -36,6 +36,30 @@ export function createWhatsAppLink(
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
 
+export function parseCsvLine(line: string): string[] {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
 export function parseGuestCsv(
   csvContent: string,
   baseUrl = DEFAULT_BASE_URL,
@@ -47,7 +71,7 @@ export function parseGuestCsv(
   const results: GuestGroup[] = [];
 
   for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(',').map((c) => c.trim());
+    const cols = parseCsvLine(lines[i]);
     const numero = cols[0] || '';
     const columna = cols[1] || '';
     const nombre = cols[2] || '';
