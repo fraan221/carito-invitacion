@@ -25,6 +25,7 @@ const DEFAULT_PHOTOS: Photo[] = rawPhotos.map((p, index) => ({
 
 export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   // Map to DepthCarousel format
   const carouselItems: DepthCarouselItem[] = useMemo(
@@ -84,7 +85,6 @@ export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
           <span className={styles.heraldLine} />
         </div>
 
-        <p className={styles.eyebrow}>Momentos Inolvidables</p>
         <h2 className={styles.title}>Constelación de Recuerdos</h2>
         <p className={styles.subtitle}>
           Un recorrido visual por instantes que marcaron mi camino hasta esta noche mágica.
@@ -109,11 +109,18 @@ export default function Gallery({ photos = DEFAULT_PHOTOS }: GalleryProps) {
             autoplay={true}
             autoplayDelay={3600}
             loop={true}
-            showControls={false}
+            showControls={true}
             showIndicators={false}
             tint="#050814"
+            onChange={(idx) => setCurrentSlide(idx)}
             onItemClick={openLightbox}
           />
+        </div>
+
+        <div className={styles.swipePrompt} aria-live="polite">
+          <span aria-hidden="true" className={styles.swipeArrow}>‹</span>
+          <span>Deslizá para explorar las fotos • {currentSlide + 1} de {photos.length}</span>
+          <span aria-hidden="true" className={styles.swipeArrow}>›</span>
         </div>
       </div>
 
