@@ -173,13 +173,22 @@ const DepthCarousel = ({
       const az = Math.abs(d);
       const shown = az <= effectiveVisible + 0.5;
 
+      if (!shown) {
+        if (el.style.display !== 'none') {
+          el.style.display = 'none';
+        }
+        continue;
+      }
+
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+      }
+
       const tz = -effectiveDepth * d;
       const tx = dir * effectiveSpread * d;
       const ry = dir * effectiveTilt * clamp(d, 0, 1);
 
-      let opacity = d < 0 ? Math.max(0, 1 + d) : 1;
-      if (!shown) opacity = 0;
-
+      const opacity = d < 0 ? Math.max(0, 1 + d) : 1;
       const brightness = Math.max(0.15, 1 - back * cfg.falloff);
       const blurPx = cfg.blur > 0 ? Math.min(cfg.blur, (back / Math.max(1, effectiveVisible)) * cfg.blur) : 0;
       const zi = Math.round(2000 - d * 20);
@@ -188,7 +197,7 @@ const DepthCarousel = ({
       el.style.opacity = opacity.toFixed(3);
       el.style.filter = `brightness(${brightness.toFixed(3)}) blur(${blurPx.toFixed(2)}px)`;
       el.style.zIndex = String(zi);
-      el.style.pointerEvents = shown && opacity > 0.05 ? 'auto' : 'none';
+      el.style.pointerEvents = opacity > 0.05 ? 'auto' : 'none';
 
       const ov = overlayRefs.current[i];
       if (ov) ov.style.opacity = clamp(back * cfg.falloff * 1.25, 0, 0.86).toFixed(3);
