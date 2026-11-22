@@ -26,7 +26,7 @@ const GIFT_OPTIONS: GiftOption[] = [
 ];
 
 export default function Gifts({
-  alias = "caro.herrera.15",
+  alias = "mili.caro.herrera",
   groupCode,
 }: GiftsProps) {
   const [copied, setCopied] = useState(false);
