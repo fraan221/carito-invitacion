@@ -211,17 +211,25 @@ export default function EventDetails({
             <div className={styles.timeRow}>
               <Clock size={16} aria-hidden="true" className={styles.timeIcon} />
               <span className={styles.timePrimary}>{cleanTime}</span>
-              <span className={styles.dotSeparator} aria-hidden="true">
-                ·
-              </span>
-              <span className={styles.dressCode}>
+            </div>
+
+            <div
+              className={styles.dressCodeBadge}
+              aria-label="Código de vestimenta: Elegante. Evitar tonos azules y plateados, reservados para Caro."
+            >
+              <div className={styles.dressCodeHeader}>
                 <Shirt
-                  size={16}
+                  size={15}
                   aria-hidden="true"
-                  className={styles.timeIcon}
+                  className={styles.dressCodeIcon}
                 />
-                <span className={styles.dressCodeText}>Elegante</span>
-              </span>
+                <strong className={styles.dressCodeHighlight}>
+                  Dress Code: Elegante
+                </strong>
+              </div>
+              <p className={styles.dressCodeNote}>
+                Evitar tonos azules y plateados (reservados para Caro)
+              </p>
             </div>
 
             <div className={styles.rsvpDeadlineBadge}>
