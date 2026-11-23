@@ -13,10 +13,17 @@ export async function validateGroup(
     return { valid: false, maxPersonas: 0 }
   }
 
+  const cleanBaseUrl = baseUrl ? baseUrl.trim() : ''
+  if (!cleanBaseUrl) {
+    return {
+      valid: false,
+      maxPersonas: 0,
+      error: 'URL de API no configurada',
+    }
+  }
+
   try {
-    // shortcut: uses window.location.origin as fallback base when baseUrl is empty/relative, upgrade if SSR is used
-    const fallbackOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
-    const url = new URL(baseUrl || fallbackOrigin)
+    const url = new URL(cleanBaseUrl)
     url.searchParams.set('g', cleanCode)
 
     const response = await fetch(url.toString(), {
@@ -55,9 +62,16 @@ export async function submitRSVP(
   data: RSVPData,
   baseUrl: string = getApiUrl()
 ): Promise<{ success: boolean; error?: string }> {
+  const cleanBaseUrl = baseUrl ? baseUrl.trim() : ''
+  if (!cleanBaseUrl) {
+    return {
+      success: false,
+      error: 'URL de API no configurada',
+    }
+  }
+
   try {
-    const url = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '')
-    const response = await fetch(url, {
+    const response = await fetch(cleanBaseUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain;charset=utf-8',
@@ -93,9 +107,17 @@ export async function submitGiftPreference(
   if (!groupCode || !groupCode.trim()) {
     return { success: false, error: 'Código de grupo requerido' }
   }
+
+  const cleanBaseUrl = baseUrl ? baseUrl.trim() : ''
+  if (!cleanBaseUrl) {
+    return {
+      success: false,
+      error: 'URL de API no configurada',
+    }
+  }
+
   try {
-    const url = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '')
-    const res = await fetch(url, {
+    const res = await fetch(cleanBaseUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({

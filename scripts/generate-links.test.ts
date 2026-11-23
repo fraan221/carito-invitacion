@@ -100,7 +100,7 @@ describe('generateLinksFromCsv', () => {
     expect(guests[0].slug).toBe('casa');
 
     const outputContent = fs.readFileSync(outputPath, 'utf-8');
-    expect(outputContent).toContain('grupo_code,nombre_grupo,max_personas,link_invitacion,link_whatsapp,observaciones');
+    expect(outputContent).toContain('grupo_code,nombre_grupo,max_personas,estado,personas_confirmadas,ultima_actualizacion,link_invitacion,link_whatsapp,tipo_regalo,observaciones');
     expect(outputContent).toContain('"casa","Casa",7');
 
     fs.rmSync(tmpDir, { recursive: true, force: true });

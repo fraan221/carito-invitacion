@@ -648,7 +648,7 @@ function StandardCountUp({
       latestRef.current?.onEnd?.();
     };
 
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
       finish();
       return undefined;
     }

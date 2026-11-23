@@ -112,11 +112,11 @@ export function generateLinksFromCsv(
   const guests = parseGuestCsv(content, baseUrl, deadline);
 
   if (outputPath) {
-    const csvHeader = 'grupo_code,nombre_grupo,max_personas,link_invitacion,link_whatsapp,observaciones\n';
+    const csvHeader = 'grupo_code,nombre_grupo,max_personas,estado,personas_confirmadas,ultima_actualizacion,link_invitacion,link_whatsapp,tipo_regalo,observaciones\n';
     const csvRows = guests
       .map(
         (g) =>
-          `"${g.slug}","${g.nombre}",${g.cantidad},"${g.invitationUrl}","${g.whatsappUrl}","${g.observaciones.replace(/"/g, '""')}"`
+          `"${g.slug}","${g.nombre}",${g.cantidad},"","","","${g.invitationUrl}","${g.whatsappUrl}","","${g.observaciones.replace(/"/g, '""')}"`
       )
       .join('\n');
     fs.writeFileSync(outputPath, csvHeader + csvRows + '\n', 'utf-8');

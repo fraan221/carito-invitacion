@@ -29,7 +29,7 @@ export default function RSVP({
     (typeof window !== "undefined"
       ? (new URLSearchParams(window.location.search).get("g") ?? "")
       : "")
-  ).trim();
+  ).trim().toLowerCase();
 
   const [code, setCode] = useState(initialCode);
   const [loadingValidation, setLoadingValidation] = useState(Boolean(initialCode));
@@ -43,14 +43,37 @@ export default function RSVP({
   const [manualError, setManualError] = useState<string | null>(null);
 
   // Form states
-  const [nombre, setNombre] = useState("");
+  const [nombre, setNombre] = useState(() => {
+    try {
+      if (typeof window !== "undefined" && initialCode) {
+        const stored = sessionStorage.getItem("carito_rsvp_submitted");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (
+            parsed.code &&
+            String(parsed.code).trim().toLowerCase() === initialCode &&
+            parsed.nombre
+          ) {
+            return String(parsed.nombre);
+          }
+        }
+      }
+    } catch {
+      // Ignore storage read error
+    }
+    return "";
+  });
   const [asiste, setAsiste] = useState(() => {
     try {
       if (typeof window !== "undefined" && initialCode) {
         const stored = sessionStorage.getItem("carito_rsvp_submitted");
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (parsed.code === initialCode && typeof parsed.asiste === "boolean") {
+          if (
+            parsed.code &&
+            String(parsed.code).trim().toLowerCase() === initialCode &&
+            typeof parsed.asiste === "boolean"
+          ) {
             return parsed.asiste;
           }
         }
@@ -71,7 +94,10 @@ export default function RSVP({
         const stored = sessionStorage.getItem("carito_rsvp_submitted");
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (parsed.code === initialCode) {
+          if (
+            parsed.code &&
+            String(parsed.code).trim().toLowerCase() === initialCode
+          ) {
             return true;
           }
         }
@@ -114,7 +140,7 @@ export default function RSVP({
 
   const handleManualValidate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const normalized = manualCode.trim();
+    const normalized = manualCode.trim().toLowerCase();
     if (!normalized) return;
 
     setValidatingManual(true);
@@ -134,7 +160,10 @@ export default function RSVP({
             const stored = sessionStorage.getItem("carito_rsvp_submitted");
             if (stored) {
               const parsed = JSON.parse(stored);
-              if (parsed.code === normalized) {
+              if (
+                parsed.code &&
+                String(parsed.code).trim().toLowerCase() === normalized
+              ) {
                 previouslySubmitted = true;
                 if (typeof parsed.asiste === "boolean") setAsiste(parsed.asiste);
                 if (parsed.nombre) setNombre(parsed.nombre);
@@ -479,11 +508,11 @@ export default function RSVP({
                       type="submit"
                       disabled={submitting}
                       className={styles.submitBtn}
-                      color="var(--color-silver-light)"
-                      trailColor="var(--color-primary-light)"
+                      color="#f8fafc"
+                      trailColor="#3b82f6"
                       backgroundColor="rgba(15, 23, 42, 0.65)"
-                      textColor="var(--color-silver-light)"
-                      borderColor="var(--border-silver)"
+                      textColor="#f8fafc"
+                      borderColor="rgba(226, 232, 240, 0.35)"
                       thickness={2}
                       radius={8}
                     >

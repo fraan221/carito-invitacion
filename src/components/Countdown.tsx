@@ -24,8 +24,9 @@ export function calculateTimeRemaining(
   } else if (typeof targetDate === "string") {
     // If no timezone offset is provided, anchor to Argentina Standard Time (-03:00)
     const trimmed = targetDate.trim();
-    const hasOffset = /(?:Z|[+-]\d{2}(?::?\d{2})?)$/.test(trimmed);
-    const normalized = hasOffset ? trimmed : `${trimmed}-03:00`;
+    const isoFormat = trimmed.replace(' ', 'T');
+    const hasOffset = /(?:Z|[+-]\d{2}(?::?\d{2})?)$/.test(isoFormat);
+    const normalized = hasOffset ? isoFormat : `${isoFormat}-03:00`;
     targetMs = new Date(normalized).getTime();
   } else {
     return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };

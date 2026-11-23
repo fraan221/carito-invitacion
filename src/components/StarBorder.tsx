@@ -99,10 +99,16 @@ const rgba = (rgb: Rgb, alpha: number) =>
 let colorContext: CanvasRenderingContext2D | null = null;
 
 const toRgb = (color: string): Rgb => {
+  let resolvedColor = color.trim();
+  if (resolvedColor.startsWith('var(') && typeof window !== 'undefined') {
+    const varName = resolvedColor.slice(4, -1).trim();
+    const computed = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    if (computed) resolvedColor = computed;
+  }
   colorContext = colorContext ?? document.createElement('canvas').getContext('2d');
   if (!colorContext) return WHITE;
   colorContext.fillStyle = '#000000';
-  colorContext.fillStyle = color;
+  colorContext.fillStyle = resolvedColor;
   const value = String(colorContext.fillStyle);
   if (value.startsWith('#')) {
     const hex = parseInt(value.slice(1, 7), 16);

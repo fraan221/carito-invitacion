@@ -65,6 +65,14 @@ describe('RSVP API Layer', () => {
       expect(res.valid).toBe(false)
       expect(res.error).toMatch(/error de red/i)
     })
+    it('returns error without fetching if baseUrl is empty', async () => {
+      const fetchMock = vi.fn()
+      globalThis.fetch = fetchMock
+
+      const res = await validateGroup('casa', '')
+      expect(res).toEqual({ valid: false, maxPersonas: 0, error: 'URL de API no configurada' })
+      expect(fetchMock).not.toHaveBeenCalled()
+    })
   })
 
   describe('submitRSVP', () => {
@@ -111,19 +119,29 @@ describe('RSVP API Layer', () => {
       expect(res.success).toBe(false)
       expect(res.error).toMatch(/error de conexión/i)
     })
+    it('returns error without fetching if baseUrl is empty', async () => {
+      const fetchMock = vi.fn()
+      globalThis.fetch = fetchMock
+
+      const res = await submitRSVP(sampleRSVP, '')
+      expect(res).toEqual({ success: false, error: 'URL de API no configurada' })
+      expect(fetchMock).not.toHaveBeenCalled()
+    })
   })
 
   describe('submitGiftPreference', () => {
+    const testBaseUrl = 'https://script.google.com/macros/s/test/exec'
+
     it('submits gift preference successfully to backend', async () => {
       globalThis.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: async () => ({ success: true }),
       } as Response)
 
-      const res = await submitGiftPreference('casa', 'transferencia')
+      const res = await submitGiftPreference('casa', 'transferencia', testBaseUrl)
       expect(res.success).toBe(true)
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        expect.any(String),
+        testBaseUrl,
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify({
@@ -137,15 +155,24 @@ describe('RSVP API Layer', () => {
 
     it('handles network error in submitGiftPreference gracefully', async () => {
       globalThis.fetch = vi.fn().mockRejectedValue(new Error('Network offline'))
-      const res = await submitGiftPreference('casa', 'efectivo')
+      const res = await submitGiftPreference('casa', 'efectivo', testBaseUrl)
       expect(res.success).toBe(false)
       expect(res.error).toBeDefined()
+    })
+
+    it('returns error without fetching if baseUrl is empty', async () => {
+      const fetchMock = vi.fn()
+      globalThis.fetch = fetchMock
+
+      const res = await submitGiftPreference('casa', 'transferencia', '')
+      expect(res).toEqual({ success: false, error: 'URL de API no configurada' })
+      expect(fetchMock).not.toHaveBeenCalled()
     })
 
     it('returns error when group code is empty without fetching', async () => {
       const fetchMock = vi.fn()
       globalThis.fetch = fetchMock
-      const res = await submitGiftPreference('   ', 'fisico')
+      const res = await submitGiftPreference('   ', 'fisico', testBaseUrl)
       expect(res.success).toBe(false)
       expect(res.error).toBe('Código de grupo requerido')
       expect(fetchMock).not.toHaveBeenCalled()

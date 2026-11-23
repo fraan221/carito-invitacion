@@ -79,6 +79,17 @@ describe("Countdown Component & Time Calculation", () => {
       expect(remaining.isExpired).toBe(false);
     });
 
+    it("normalizes date strings with spaces instead of T for Safari iOS compatibility", () => {
+      const nowInUtc = new Date("2027-02-06T23:00:00Z");
+      const remaining = calculateTimeRemaining("2027-02-06 21:00:00", nowInUtc);
+
+      expect(remaining.days).toBe(0);
+      expect(remaining.hours).toBe(1);
+      expect(remaining.minutes).toBe(0);
+      expect(remaining.seconds).toBe(0);
+      expect(remaining.isExpired).toBe(false);
+    });
+
     it("safely handles invalid date inputs without throwing", () => {
       const remaining = calculateTimeRemaining("invalid-date");
       expect(remaining.isExpired).toBe(true);

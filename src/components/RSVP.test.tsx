@@ -107,6 +107,27 @@ describe('RSVP Component', () => {
     expect(screen.queryByText(/muchas gracias por confirmar/i)).not.toBeInTheDocument()
   })
 
+  it('restores name and choices when guest returns with ?g= and clicks modificar respuesta', async () => {
+    sessionStorage.setItem(
+      'carito_rsvp_submitted',
+      JSON.stringify({ code: 'familia-perez', asiste: true, nombre: 'Carlos Pérez' })
+    )
+    window.location.search = '?g=familia-perez'
+    vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 4 })
+
+    render(<RSVP />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/muchas gracias por confirmar/i)).toBeInTheDocument()
+    })
+
+    const editBtn = screen.getByRole('button', { name: /modificar respuesta/i })
+    fireEvent.click(editBtn)
+
+    const nameInput = screen.getByLabelText(/tu nombre y apellido/i) as HTMLInputElement
+    expect(nameInput.value).toBe('Carlos Pérez')
+  })
+
   it('renders custom rsvpDeadline in prompt when prop provided', async () => {
     window.location.search = '?g=familia-perez'
     vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 4 })

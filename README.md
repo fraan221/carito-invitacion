@@ -36,7 +36,7 @@ carito-invitacion/
 ├── AGENTS.md                  # Reglas y directivas de diseño y comportamiento para agentes AI
 ├── PRODUCT.md                 # Documento de producto, especificaciones, alcance y decisiones
 ├── README.md                  # Este documento
-├── index.html                 # Punto de entrada HTML con Google Fonts (Cinzel, Montserrat, Playfair)
+├── index.html                 # Punto de entrada HTML con Google Fonts (Cinzel, Plus Jakarta Sans)
 ├── package.json               # Dependencias y scripts
 ├── vite.config.ts             # Configuración de Vite
 ├── tsconfig.json              # Configuración de TypeScript
@@ -115,7 +115,7 @@ pnpm preview
    - El componente `RSVP` valida el código de grupo en el backend, precarga los nombres de los asistentes habilitados y permite confirmar o declinar dentro del cupo asignado.
 5. **Facilidades para el Invitado**:
    - Apertura de la ubicación exacta en Google Maps con un solo tap.
-   - Copiado con un tap del alias bancario (`caro.herrera.15`) con feedback visual instantáneo.
+   - Copiado con un tap del alias bancario (`mili.caro.herrera.`) con feedback visual instantáneo.
 
 ---
 

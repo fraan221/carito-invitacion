@@ -188,7 +188,9 @@ const ClickSpark = forwardRef<ClickSparkHandle, ClickSparkProps>(
       const layer = layerRef.current;
       if (!root || !layer) return;
 
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reduced =
+        typeof window !== 'undefined' &&
+        (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false);
       const bursts: Burst[] = [];
       let raf = 0;
       let lastPress = { time: -1e9, x: 0, y: 0 };
