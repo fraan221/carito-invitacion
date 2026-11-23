@@ -178,6 +178,13 @@ export default function RSVP({
     e.preventDefault();
     if (!nombre.trim()) return;
 
+    if (asiste && cantidad > 1 && !acompanantes.trim()) {
+      setErrorMessage(
+        "Por favor completá los nombres de tus acompañantes para poder reservar sus lugares.",
+      );
+      return;
+    }
+
     setSubmitting(true);
     setErrorMessage(null);
 
@@ -402,7 +409,10 @@ export default function RSVP({
                         type="button"
                         role="radio"
                         aria-checked={!asiste}
-                        onClick={() => setAsiste(false)}
+                        onClick={() => {
+                          setAsiste(false);
+                          if (errorMessage) setErrorMessage(null);
+                        }}
                         className={`${styles.toggleBtn} ${!asiste ? styles.toggleBtnActive : ""}`}
                       >
                         <span>No podré asistir</span>
@@ -419,7 +429,11 @@ export default function RSVP({
                       <select
                         id="rsvp-cantidad"
                         value={cantidad}
-                        onChange={(e) => setCantidad(Number(e.target.value))}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setCantidad(val);
+                          if (val === 1 && errorMessage) setErrorMessage(null);
+                        }}
                         className={styles.select}
                       >
                         {Array.from(
@@ -441,14 +455,19 @@ export default function RSVP({
                         htmlFor="rsvp-acompanantes"
                         className={styles.label}
                       >
-                        Nombres de tus acompañantes
+                        Nombres de tus acompañantes{" "}
+                        <span className={styles.requiredTag} aria-hidden="true">(requerido)</span>
                       </label>
                       <input
                         id="rsvp-acompanantes"
                         type="text"
+                        required
                         value={acompanantes}
-                        onChange={(e) => setAcompanantes(e.target.value)}
-                        placeholder="Ej: Juan, Sofía..."
+                        onChange={(e) => {
+                          setAcompanantes(e.target.value);
+                          if (errorMessage) setErrorMessage(null);
+                        }}
+                        placeholder={cantidad - 1 === 1 ? "Nombre y apellido de tu acompañante" : "Ej: Juan Pérez, Sofía Gómez..."}
                         className={styles.input}
                       />
                     </div>

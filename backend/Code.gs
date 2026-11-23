@@ -110,6 +110,9 @@ function doPost(e) {
       if (cantidad > group.maxPersonas) {
         return jsonResponse({ success: false, error: 'Excede capacidad autorizada' });
       }
+      if (cantidad > 1 && (!data.acompanantes || !String(data.acompanantes).trim())) {
+        return jsonResponse({ success: false, error: 'Debe especificar los nombres de los acompañantes' });
+      }
     }
 
     const sheetResponses = getSheet(SHEET_RESPONSES);

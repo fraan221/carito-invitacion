@@ -204,6 +204,30 @@ describe('RSVP Component', () => {
     expect(screen.getByLabelText(/tu nombre y apellido/i)).toBeInTheDocument()
   })
 
+  it('prevents submission when cantidad > 1 and acompanantes field is blank', async () => {
+    window.location.search = '?g=familia-perez'
+    vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 3 })
+
+    render(<RSVP />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/tu nombre y apellido/i)).toBeInTheDocument()
+    })
+
+    fireEvent.change(screen.getByLabelText(/tu nombre y apellido/i), {
+      target: { value: 'Juan Pérez' },
+    })
+
+    const quantitySelect = screen.getByLabelText(/¿cuántas personas asistirán/i)
+    fireEvent.change(quantitySelect, { target: { value: '2' } })
+
+    const form = screen.getByLabelText(/tu nombre y apellido/i).closest('form')!
+    fireEvent.submit(form)
+
+    expect(screen.getByText(/por favor completá los nombres de tus acompañantes/i)).toBeInTheDocument()
+    expect(api.submitRSVP).not.toHaveBeenCalled()
+  })
+
   it('displays error message if submission fails', async () => {
     window.location.search = '?g=familia-perez'
     vi.mocked(api.validateGroup).mockResolvedValue({ valid: true, maxPersonas: 2 })

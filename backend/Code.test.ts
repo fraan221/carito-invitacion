@@ -186,6 +186,23 @@ describe('Google Apps Script Backend (Code.gs)', () => {
       expect(mockResponsesAppended.length).toBe(0)
     })
 
+    it('rechaza si asiste con más de 1 persona pero no especifica acompañantes', () => {
+      const payload = {
+        grupo_code: 'casa',
+        nombre: 'Carlos',
+        asiste: true,
+        cantidad: 2,
+        acompanantes: '   ',
+      }
+
+      const res = gas.doPost({ postData: { contents: JSON.stringify(payload) } })
+      const body = (res as any).getParsed()
+
+      expect(body.success).toBe(false)
+      expect(body.error).toContain('Debe especificar los nombres de los acompañantes')
+      expect(mockResponsesAppended.length).toBe(0)
+    })
+
     it('maneja el timeout del script lock de forma segura sin lanzar excepción en finally', () => {
       waitLockMock.mockImplementationOnce(() => {
         hasLockValue = false

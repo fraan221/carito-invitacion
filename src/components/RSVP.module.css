@@ -125,6 +125,15 @@
   color: var(--color-silver-light);
 }
 
+.requiredTag {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-silver-dark);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 /* Ethereal Floating Form Inputs */
 .input,
 .select {
